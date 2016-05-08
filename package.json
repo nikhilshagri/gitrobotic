@@ -1,0 +1,24 @@
+{
+  "name": "git-gui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "./node_modules/webpack/bin/webpack.js src/main.js dist/bundle.js --module-bind 'js=babel-loader'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron-prebuilt": "^0.37.8",
+    "webpack": "^1.13.0"
+  },
+  "dependencies": {
+    "babel-core": "^6.8.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-react": "^6.5.0",
+    "react": "^15.0.2",
+    "react-dom": "^15.0.2"
+  }
+}
