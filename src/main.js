@@ -6,6 +6,28 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActivityArea from './ActivityArea'
 
+import Git from 'nodegit';
+
+var pathToRepo = require('path').resolve('../js-reporters');
+
+var getMostRecentCommit = function(repository) {
+  return repository.getBranchCommit("master");
+};
+
+var getCommitMessage = function(commit) {
+  return commit.message();
+};
+
+Git.Repository.open(pathToRepo).then(getMostRecentCommit)
+.then(getCommitMessage)
+.then(function(message) {
+  console.log(message);
+})
+.catch(function(error) {
+  console.log("ERROR: "+error);
+});
+
+
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
 
 class App extends React.Component {
