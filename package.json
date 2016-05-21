@@ -7,7 +7,8 @@
     "electron": "0.37.8"
   },
   "scripts": {
-    "start": "electron .",
+    "start": "webpack && electron .",
+    "s": "npm start",
     "build": "webpack",
     "dev": "webpack-dev-server --devtool eval --progress --colors --content-base src/",
     "test": "echo \"Error: no test specified\" && exit 1"
