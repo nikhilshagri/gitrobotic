@@ -7,7 +7,12 @@
   </head>
   <body>
     <div id="app"></div>
-    <script src="../build/bundle.js"></script>
-    <!-- <script type="text/javascript" src="./main.js" ></script> -->
+    <script>
+      (function() {
+        const script = document.createElement('script');
+        script.src = (process.env.HOT) ? 'http://localhost:3000/build/bundle.js' : '../build/bundle.js';
+        document.write(script.outerHTML);
+      }());
+    </script>
   </body>
 </html>
