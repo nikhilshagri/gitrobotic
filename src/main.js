@@ -6,15 +6,17 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import keycode from 'keycode'
 
 import Git from 'nodegit';
 
 // var pathToRepo = require('path').resolve('../js-reporters');
 
 
-var getCommits = function(pathToRepo) {
+var getCommits = function(repo) {
 
-  pathToRepo = require('path').resolve(pathToRepo);
+  var pathToRepo = require('path').resolve(repo);
   Git.Repository.open(pathToRepo)
   .then(function(repo) {
     return repo.getMasterCommit();
@@ -40,30 +42,29 @@ var getCommits = function(pathToRepo) {
         });
       });
 
-      this.setCommitsState(commits);
+      this.getCommits(commits, repo);
   }).bind(this);
 
 }
 
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
-const style= {
-  margin:12,
-};
+
 
 class Commit extends React.Component {
   render() {
     var commit = this.props.commit;
     return (
-      <div>
-        <Card >
-          <CardHeader subtitle={commit.sha} />
-          <CardTitle title={commit.author} subtitle={commit.email} />
-          <CardTitle subtitle={commit.date} />
-          <CardText>
-            {commit.message}
+      <div >
+        <Card style={ {margin:5} } >
+          <CardHeader title={commit.author} subtitle={commit.message}
+          actAsExpander={true} 
+          showExpandableButton={true} />
+          <CardText  expandable={true} >
+            <p>{commit.email}</p>
+            <p>{commit.sha}</p>
+            <p>{commit.date}</p>
           </CardText>
         </Card>
-        <br />
       </div>
     )
   }
@@ -83,28 +84,74 @@ class SearchBar extends React.Component {
     });
   }
 
-  sendQuery() {
-    this.props.onKeyPress(this.state.value);
+  sendQuery(event) {
+    console.log(event.which);
+    if(!event.which || (event.which && event.which === 13) )
+      this.props.onKeyPress(this.state.value);
   }
 
   render() {
+    const style = {
+      margin:10
+    };
+
     return (
-      <div>
-        <input type="text" placeholder="Enter Repo name here..." ref="textField" value={this.state.value} onChange={this.updateValue} />
-        <RaisedButton label="Get Commits!" style={style} onMouseDown={this.sendQuery} />
+      <div style={style} >
+        <input type="text" placeholder="Enter Repo name here..." ref="textField" 
+        value={this.state.value} onChange={this.updateValue} onKeyDown={this.sendQuery} />
+        <RaisedButton label="Get Commits!"  onMouseDown={this.sendQuery} />
       </div>
     )
   }
 }
 
+
 class CommitTable extends React.Component {
   render() {
-    var rows=[];
+
+    const style={
+      border:'1px solid black', 
+      overflow: 'auto', 
+      width: '100%' 
+    };
+
+    let rows=[];
     this.props.commits.forEach(function(commit, index) {
       rows.push(<Commit commit={commit} key={index} />);
     });
     return (
-    <div>{ rows }</div>
+      <div style={style}>{ rows }</div>
+    )
+  }
+}
+
+class RepoTable extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(obj) {
+    // this.handleRepoClick(this.)
+    console.log(obj.target);
+  }
+
+  render() {
+    const style= {
+      margin: 5,
+    };
+
+    let rows = [];
+    this.props.repos.forEach((function(repo, index) {
+        rows.push(
+          <Card style={style} key={index} onMouseDown={this.handleClick} >
+            <CardHeader title={repo} />
+          </Card>
+        );
+    }).bind(this));
+    return (
+      <div>{rows}</div>
     )
   }
 }
@@ -112,8 +159,13 @@ class CommitTable extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { pathToRepo:'' , commits: [] };
+    this.state = { 
+      pathToRepo:'' , 
+      commits: [] , 
+      repos: [] 
+    };
     this.handleKeyPressChange = this.handleKeyPressChange.bind(this);
+    this.handleRepoClick = this.handleRepoClick.bind(this);
   }
 
   handleKeyPressChange(passedPath)
@@ -121,19 +173,41 @@ class App extends React.Component {
     (getCommits.bind(this))(passedPath);
   }
 
-  setCommitsState(commits)
+  getCommits(commits, repo)
   {
-    this.setState( { commits: commits });
-    console.log(this.state.commits);
+    var repos = this.state.repos;
+    repo = repo.slice(3);
+    if(repos.indexOf(repo) == -1)
+      repos.push(repo);
+    this.setState( { 
+      commits: commits, 
+      repos: repos
+    });
+    console.log("AFTER"+this.state.commits, this.state.repos);
+  }
+
+  handleRepoClick() {
+
   }
 
   render() {
+
+    const style = {
+      display: 'flex',
+      border: '1px solid black',
+      width:800,
+      height:400,
+    };
 
     return (
       <MuiThemeProvider muiTheme={darkMuiTheme}>
         <div>
           <SearchBar pathToRepo={this.state.pathToRepo} onKeyPress={this.handleKeyPressChange} />  
-          <CommitTable commits={this.state.commits} />
+          <div style={style} >
+            <RepoTable repos={this.state.repos} />
+            <br />
+            <CommitTable commits={this.state.commits} selectRepo={this.handleRepoClick} />
+          </div>
         </div>
       </MuiThemeProvider>
     )
@@ -142,6 +216,6 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <App />,
+  <App  />,
   document.getElementById('app')
 );
