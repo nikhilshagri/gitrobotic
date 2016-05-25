@@ -14,7 +14,7 @@ import Git from 'nodegit';
 // var pathToRepo = require('path').resolve('../js-reporters');
 
 
-var getCommits = function(repo) {
+var getCommitsFromRepo = function(repo) {
 
   var pathToRepo = require('path').resolve(repo);
   Git.Repository.open(pathToRepo)
@@ -42,7 +42,12 @@ var getCommits = function(repo) {
         });
       });
 
-      this.getCommits(commits, repo);
+      let newRepo = {
+        repoName:repo.slice(3),
+        commits: commits
+      };
+
+      this.returnRepo(newRepo);
   }).bind(this);
 
 }
@@ -85,7 +90,6 @@ class SearchBar extends React.Component {
   }
 
   sendQuery(event) {
-    console.log(event.which);
     if(!event.which || (event.which && event.which === 13) )
       this.props.onKeyPress(this.state.value);
   }
@@ -132,9 +136,8 @@ class RepoTable extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(obj) {
-    // this.handleRepoClick(this.)
-    console.log(obj.target);
+  handleClick(i) {
+    this.props.selectRepo(i);
   }
 
   render() {
@@ -145,8 +148,8 @@ class RepoTable extends React.Component {
     let rows = [];
     this.props.repos.forEach((function(repo, index) {
         rows.push(
-          <Card style={style} key={index} onMouseDown={this.handleClick} >
-            <CardHeader title={repo} />
+          <Card style={style} key={index} onMouseDown={this.handleClick.bind(this, index)} >
+            <CardHeader title={repo.repoName} />
           </Card>
         );
     }).bind(this));
@@ -161,33 +164,51 @@ class App extends React.Component {
     super(props);
     this.state = { 
       pathToRepo:'' , 
-      commits: [] , 
-      repos: [] 
+      currentRepo: '', 
+      currentRepoCommits: [],
+      repos: [],
+      repoNames: [] 
     };
     this.handleKeyPressChange = this.handleKeyPressChange.bind(this);
     this.handleRepoClick = this.handleRepoClick.bind(this);
+    this.setCurrentCommits = this.setCurrentCommits.bind(this);
+    this.returnRepo = this.returnRepo.bind(this);
   }
 
   handleKeyPressChange(passedPath)
   {
-    (getCommits.bind(this))(passedPath);
+    let repoName = passedPath.slice(3);
+    if(this.state.repoNames.indexOf(repoName) == -1) {
+      //call to global function
+      (getCommitsFromRepo.bind(this))(passedPath);
+    }
+    else {
+
+    }
   }
 
-  getCommits(commits, repo)
-  {
-    var repos = this.state.repos;
-    repo = repo.slice(3);
-    if(repos.indexOf(repo) == -1)
-      repos.push(repo);
-    this.setState( { 
-      commits: commits, 
-      repos: repos
+  setCurrentCommits(repo) {
+    this.setState({
+      currentRepo: repo.repoName,
+      currentRepoCommits: repo.commits
     });
-    console.log("AFTER"+this.state.commits, this.state.repos);
   }
 
-  handleRepoClick() {
+  handleRepoClick(index) {
+    this.setCurrentCommits(this.state.repos[index]);
+  }
 
+  returnRepo(newRepo)
+  {
+    let repos = this.state.repos;
+    let repoNames = this.state.repoNames;
+    repos.push(newRepo);
+    repoNames.push(newRepo.repoName);
+    this.setState({
+      repos: repos,
+      repoNames: repoNames
+    });
+    this.setCurrentCommits(newRepo);
   }
 
   render() {
@@ -204,9 +225,9 @@ class App extends React.Component {
         <div>
           <SearchBar pathToRepo={this.state.pathToRepo} onKeyPress={this.handleKeyPressChange} />  
           <div style={style} >
-            <RepoTable repos={this.state.repos} />
+            <RepoTable repos={this.state.repos} selectRepo={this.handleRepoClick} />
             <br />
-            <CommitTable commits={this.state.commits} selectRepo={this.handleRepoClick} />
+            <CommitTable commits={this.state.currentRepoCommits}  />
           </div>
         </div>
       </MuiThemeProvider>
