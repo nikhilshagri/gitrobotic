@@ -7,22 +7,31 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
-import keycode from 'keycode'
+import keycode from 'keycode';
+import ActivityArea from './ActivityArea';
+import CommitTree from './CommitTreePanel';
+import StagingArea from './StagingAreaPanel';
+import {Tabs, Tab} from 'material-ui/Tabs';
+
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
 
 import Git from 'nodegit';
 
 // var pathToRepo = require('path').resolve('../js-reporters');
 
 
-var getCommitsFromRepo = function(repo) {
+const getCommitsFromRepo = function(repo) {
 
-  var pathToRepo = require('path').resolve(repo);
+  let pathToRepo = require('path').resolve(repo);
   Git.Repository.open(pathToRepo)
   .then(function(repo) {
     return repo.getMasterCommit();
   })
   .then(function( firstMasterCommit ) {
-    var history = firstMasterCommit.history( Git.Revwalk.SORT.Time);
+    let history = firstMasterCommit.history( Git.Revwalk.SORT.Time);
     history.on("end", walk);
     history.start();
   })
@@ -30,8 +39,8 @@ var getCommitsFromRepo = function(repo) {
 
   //   function passed to history.on() listener to receive commits' info. 
   //   calls the setCommitState of App class to set new state
-  var walk = (function(commitsArr) {
-    var commits = [];
+  const walk = (commitsArr) => {
+    let commits = [];
       commitsArr.forEach( function(commit) {
         commits.push({ 
           sha: commit.sha(), 
@@ -42,54 +51,31 @@ var getCommitsFromRepo = function(repo) {
         });
       });
 
-      let newRepo = {
+      const newRepo = {
         repoName:repo.slice(3),
         commits: commits
       };
 
       this.returnRepo(newRepo);
-  }).bind(this);
+  };
 
 }
 
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
 
-
-class Commit extends React.Component {
-  render() {
-    var commit = this.props.commit;
-    return (
-      <div >
-        <Card style={ {margin:5} } >
-          <CardHeader title={commit.author} subtitle={commit.message}
-          actAsExpander={true} 
-          showExpandableButton={true} />
-          <CardText  expandable={true} >
-            <p>{commit.email}</p>
-            <p>{commit.sha}</p>
-            <p>{commit.date}</p>
-          </CardText>
-        </Card>
-      </div>
-    )
-  }
-}
-
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state={ value:props.pathToRepo };
-    this.updateValue = this.updateValue.bind(this);
-    this.sendQuery = this.sendQuery.bind(this);
   }
 
-  updateValue(event) {
+  updateValue = (event) => {
     this.setState({
       value: event.target.value
     });
   }
 
-  sendQuery(event) {
+  sendQuery = (event) => {
     if(!event.which || (event.which && event.which === 13) )
       this.props.onKeyPress(this.state.value);
   }
@@ -109,34 +95,13 @@ class SearchBar extends React.Component {
   }
 }
 
-
-class CommitTable extends React.Component {
-  render() {
-
-    const style={
-      border:'1px solid black', 
-      overflow: 'auto', 
-      width: '100%' 
-    };
-
-    let rows=[];
-    this.props.commits.forEach(function(commit, index) {
-      rows.push(<Commit commit={commit} key={index} />);
-    });
-    return (
-      <div style={style}>{ rows }</div>
-    )
-  }
-}
-
 class RepoTable extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(i) {
+  handleClick = (i) => {
     this.props.selectRepo(i);
   }
 
@@ -154,7 +119,7 @@ class RepoTable extends React.Component {
         );
     }).bind(this));
     return (
-      <div>{rows}</div>
+      <div style={this.props.style} >{rows}</div>
     )
   }
 }
@@ -167,16 +132,18 @@ class App extends React.Component {
       currentRepo: '', 
       currentRepoCommits: [],
       repos: [],
-      repoNames: [] 
+      repoNames: [],
+      tabValue: 'CommitTree' 
     };
-    this.handleKeyPressChange = this.handleKeyPressChange.bind(this);
-    this.handleRepoClick = this.handleRepoClick.bind(this);
-    this.setCurrentCommits = this.setCurrentCommits.bind(this);
-    this.returnRepo = this.returnRepo.bind(this);
   }
 
-  handleKeyPressChange(passedPath)
-  {
+  handleTabChange = (value) => {
+    this.setState({
+      tabValue: value
+    });
+  }
+
+  handleKeyPressChange = (passedPath) => {
     let repoName = passedPath.slice(3);
     if(this.state.repoNames.indexOf(repoName) == -1) {
       //call to global function
@@ -187,18 +154,18 @@ class App extends React.Component {
     }
   }
 
-  setCurrentCommits(repo) {
+  setCurrentCommits = (repo) => {
     this.setState({
       currentRepo: repo.repoName,
       currentRepoCommits: repo.commits
     });
   }
 
-  handleRepoClick(index) {
+  handleRepoClick = (index) => {
     this.setCurrentCommits(this.state.repos[index]);
   }
 
-  returnRepo(newRepo)
+  returnRepo = (newRepo) =>
   {
     let repos = this.state.repos;
     let repoNames = this.state.repoNames;
@@ -211,23 +178,50 @@ class App extends React.Component {
     this.setCurrentCommits(newRepo);
   }
 
+  componentWillMount = () => {
+    injectTapEventPlugin();
+  }
+
   render() {
 
-    const style = {
-      display: 'flex',
-      border: '1px solid black',
-      width:800,
-      height:400,
+    const styles = {
+      mainPanel: {
+        display: 'flex',
+        border: '1px solid black',
+        width: '80%',
+        height:400
+      },
+      repos: {
+        flexShrink:3,
+        width: '100%'
+      },
+      tabs: {
+        border:'1px solid black', 
+        overflow: 'auto', 
+        width: '100%'
+      }
     };
+
 
     return (
       <MuiThemeProvider muiTheme={darkMuiTheme}>
         <div>
           <SearchBar pathToRepo={this.state.pathToRepo} onKeyPress={this.handleKeyPressChange} />  
-          <div style={style} >
-            <RepoTable repos={this.state.repos} selectRepo={this.handleRepoClick} />
-            <br />
-            <CommitTable commits={this.state.currentRepoCommits}  />
+          <div style={styles.mainPanel} >
+
+            <RepoTable style={styles.repos} repos={this.state.repos} selectRepo={this.handleRepoClick} />
+
+            <Tabs style={styles.tabs} value={this.state.tabValue}  onChange={this.handleTabChange} >
+
+              <Tab label="Commits" value="CommitTree" >
+                <CommitTree commits={this.state.currentRepoCommits}  />
+              </Tab>
+
+              <Tab label="Staging Area" value="StagingArea" >
+                <StagingArea />
+              </Tab>
+
+            </Tabs>
           </div>
         </div>
       </MuiThemeProvider>
