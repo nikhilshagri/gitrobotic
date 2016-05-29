@@ -218,7 +218,7 @@ class App extends React.Component {
               </Tab>
 
               <Tab label="Staging Area" value="StagingArea" >
-                <StagingArea />
+                <StagingArea repo={this.state.currentRepo} />
               </Tab>
 
             </Tabs>
