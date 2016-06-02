@@ -108,6 +108,7 @@ class RepoTable extends React.Component {
   render() {
     const style= {
       margin: 5,
+      cursor: 'pointer'
     };
 
     let rows = [];
@@ -182,6 +183,11 @@ class App extends React.Component {
     injectTapEventPlugin();
   }
 
+  //for dev prurposes only
+  componentDidMount = () => {
+    this.handleKeyPressChange('../git-gui');
+  }
+
   render() {
 
     const styles = {
@@ -204,9 +210,9 @@ class App extends React.Component {
 
 
     return (
-      <MuiThemeProvider muiTheme={darkMuiTheme}>
+      <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div>
-          <SearchBar pathToRepo={this.state.pathToRepo} onKeyPress={this.handleKeyPressChange} />  
+          <SearchBar pathToRepo={this.state.pathToRepo} onKeyPress={this.handleKeyPressChange} /> 
           <div style={styles.mainPanel} >
 
             <RepoTable style={styles.repos} repos={this.state.repos} selectRepo={this.handleRepoClick} />
