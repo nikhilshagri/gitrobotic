@@ -52,32 +52,13 @@ class gitFunctions {
 			});
 	}
 
-	static globalgetStatus(repoName) {
+	static getStatus(repoName) {
 
 		repoName = "../"+repoName;
-
 		let pathToRepo = require('path').resolve(repoName);
-		console.log("repoName="+pathToRepo);
 
-		Git.Repository.open(pathToRepo)
-		  .then(function(repo) {
-		    repo.getStatus().then(function(statuses) {
-		      function statusToText(status) {
-		        var words = [];
-		        if (status.isNew()) { words.push("NEW"); }
-		        if (status.isModified()) { words.push("MODIFIED"); }
-		        if (status.isTypechange()) { words.push("TYPECHANGE"); }
-		        if (status.isRenamed()) { words.push("RENAMED"); }
-		        if (status.isIgnored()) { words.push("IGNORED"); }
-
-		        return words.join(" ");
-		      }
-
-		      statuses.forEach(function(file) {
-		        console.log(file.path() + " " + statusToText(file));
-		      });
-		    });
-		});
+		return Git.Repository.open(pathToRepo);
+	}
 	}
 }
 
