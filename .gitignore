@@ -1,2 +1,4 @@
 node_modules/*
-dist/*
+build/*
+main.js
+main.js.map
