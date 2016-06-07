@@ -41,6 +41,23 @@ class gitFunctions {
 
 		return Git.Repository.open(pathToRepo);
 	}
+
+	static getIndex(repoName) {
+
+		let repo;
+		repoName = "../"+repoName;
+		let pathToRepo = require('path').resolve(repoName);
+
+		return Git.Repository.open(pathToRepo)
+		.then( (repoResult) => {
+			repo = repoResult;
+		})
+		.then(function() {
+		  return repo.refreshIndex();
+		});
+
+	}
+}
 	}
 }
 
