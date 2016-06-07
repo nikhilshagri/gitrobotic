@@ -1,38 +1,23 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
+import FlatButton from 'material-ui/FlatButton';
 
 import Git from 'nodegit';
 
 class gitFunctions {
 
-	static refreshIndex(repoName) {
+	static createCommit(repoName, oid) {
 		let index;
-		let oid;
 		let repo;
 
 		repoName = "../"+repoName;
 
 		let pathToRepo = require('path').resolve(repoName);
 
-		Git.Repository.open(pathToRepo)
+		return Git.Repository.open(pathToRepo)
 			.then(function(repoResult) {
 				repo = repoResult;
-				return repo.refreshIndex();
-			})
-			.then(function(indexResult) {
-				index = indexResult;
-			})
-			.then(function() {
-			  return index.addAll();
-			})
-			.then(function() {
-			  return index.write();
-			})
-			.then(function() {
-			  return index.writeTree();
-			})
-			.then(function(oidResult) {
-			  oid = oidResult;
 			  return Git.Reference.nameToId(repo, "HEAD");
 			})
 			.then(function(head) {
@@ -46,9 +31,6 @@ class gitFunctions {
 			    "emailid@domain.com", currTimeInSecs , 0);
 
 			  return repo.createCommit("HEAD", author, committer, "message", oid, [parent]);
-			})
-			.done(function(commitId) {
-				StagingArea.refreshIndex(commitId);
 			});
 	}
 
