@@ -58,6 +58,50 @@ class gitFunctions {
 
 	}
 }
+
+class CheckBoxWrapper extends React.Component {
+		constructor(props) {
+		super(props);
+		this.state={
+			checked: this.props.checked
+		};
+	}
+
+	onEventCheck = (event, isInputChecked) => {
+		event.stopPropagation();
+
+		this.changeCheckedState(isInputChecked);
+	}
+
+	changeCheckedState = (isInputChecked) => {
+
+		window.setTimeout( () => {
+			this.setState({
+				checked: isInputChecked? true : false
+			});
+		}, 0);
+
+		// this.props.onChangeSelected(this.props.uniqueId, isInputChecked );
+	}
+
+	componentWillReceiveProps = (newprops) => {
+	}
+
+	render = () => {
+		const styles={
+		  checkbox: {
+		    marginBottom: 3
+		  }
+  	};
+
+		return(
+			<div>
+				<Checkbox style={styles.checkbox} label={this.props.label} 
+				value={this.props.value} onCheck={this.onEventCheck} checked={this.state.checked} />
+			</div>
+		)
+	}
+}
 	}
 }
 
