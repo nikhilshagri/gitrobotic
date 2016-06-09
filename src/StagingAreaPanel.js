@@ -102,6 +102,40 @@ class CheckBoxWrapper extends React.Component {
 		)
 	}
 }
+
+class ChangesList extends React.Component {
+	constructor(props) {
+		super(props);
+		//contains refs to all the CheckBoxWrapper components
+		this.checkboxRefs= [];
+	}
+
+	toggleWrapperState = () => {
+		this.checkboxRefs.forEach( (ref, index) => {
+			if(ref !== null)
+				ref.changeCheckedState(this.props.selectAll);
+		})
+	}
+
+	render = () => {
+		let renderStatus;
+		if(this.props.statuses.length === 0) {
+			renderStatus = <p>No Changes!</p>
+		}
+		else {
+			renderStatus = this.props.statuses.map((status, index) => {
+								      return <CheckBoxWrapper key={index} uniqueId={index} label={status.label} 
+								      ref={(ref) => this.checkboxRefs[index] = ref}
+								      onChangeSelected={this.props.onChangeSelected} checked={this.props.selectAll} value={status.value} />;
+				});
+		}
+		return(
+			<div>
+				{renderStatus}
+			</div>
+		)
+	}
+}
 	}
 }
 
