@@ -136,6 +136,110 @@ class ChangesList extends React.Component {
 		)
 	}
 }
+
+class StatusTable extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			statuses: [],
+			selectAll: true
+		};
+	}
+
+	getStatus = (repo) => {
+		let promise = gitFunctions.getStatus(repo);
+		promise.then(function(repo) {
+	    repo.getStatus().then(function(status) {
+	    	return status;
+	    })
+	    .done(function(statuses) {
+				this.setState({
+					statuses:statuses
+				});
+	    }.bind(this));
+	  }.bind(this));
+	}
+
+	checkSelectAll = (event, isInputChecked) => {
+
+		event.stopPropagation();
+
+		window.setTimeout( () => {
+			this.setState({
+				selectAll: isInputChecked? true : false
+			});
+
+			//reaches into the changesList component, which 
+			//in turn reaches into individual CheckBoxWrapper components
+			//and sets state accordingly
+			this.changesList.toggleWrapperState(this.state.selectAll);
+		}, 0);
+
+	}
+
+	componentWillReceiveProps = (newprops) => {
+		// console.log('receive props',this.state.selectAll);
+			this.getStatus(newprops.repo);
+	}
+
+
+	render = () => {
+		let localStatus = [];
+		if(this.state.statuses.length === 0)
+		{
+			localStatus = [];
+		}
+		else {
+
+	    const statusToText=function(status) {
+	      let words=[];
+	      let flag = 0;
+	      let int = 1;
+
+	      if (status.isNew()) { words.push(<span key={int} style={{color:'green'}}>NEW</span>); flag = 1;}
+	      if (status.isModified()) { words.push(<span key={int} style={{color:'yellow'}}>MODIFIED</span>); flag = 1;}
+	      if (status.isTypechange()) { words.push(<span key={int} style={{color:'blue'}}>TYPECHANGED</span>); flag = 1;}
+	      if (status.isRenamed()) { words.push(<span key={int} style={{color:'orange'}}>RENAMED</span>); flag = 1;}
+	      if (status.isIgnored()) { words.push(<span key={int} style={{color:'red'}}>IGNORED</span>); flag = 1; }
+	      if(flag == 0) { words.push(<span key={int} style={{color:'red'}}>DELETED</span>); }
+
+	      return words;
+   	 	};
+   	 	
+	    localStatus = this.state.statuses.map((file, index) => {
+
+	    	let change=statusToText(file);
+	    	let changes =[];
+	    	changes.push(<span key={0} >{file.path()}</span>);
+	    	changes.push(change);
+
+	    	return ({
+	    		label:changes,
+	    		value: file.path()
+	    	});
+
+	    });
+		}
+
+		const styles = {
+			root:{
+				border: '1px solid black'
+			},
+			ul:{
+				listStyleType: 'none'
+			}
+		};
+		return(
+			<div style={styles.root} >
+				<p>STATUS</p>
+				<Checkbox label='Select All:' ref={(ref) => this.selectAll = ref}  style={{width: 200}}
+				onCheck={this.checkSelectAll} checked={this.state.selectAll} labelPosition='left' />
+				<ChangesList ref={(ref) => this.changesList = ref} selectAll={this.state.selectAll}
+				statuses={localStatus} />
+			</div>
+		)
+	}
+}
 	}
 }
 
