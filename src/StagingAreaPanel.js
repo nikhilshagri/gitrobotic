@@ -240,6 +240,20 @@ class StatusTable extends React.Component {
 		)
 	}
 }
+
+class IndexTable extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+
+	render = () => {
+		return (
+			<div>
+				{this.props.indexEntries.map( (entry, index) => {
+					return <div key ={index}>{entry}<br /></div>;
+				})}
+			</div>
+		);
 	}
 }
 
