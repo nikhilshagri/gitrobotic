@@ -7,13 +7,13 @@ import Git from 'nodegit';
 
 class gitFunctions {
 
-	static createCommit(repoName, oid) {
+	static createCommit(repoPath, oid) {
 		let index;
 		let repo;
 
-		repoName = "../"+repoName;
+		// repoName = "../"+repoName;
 
-		let pathToRepo = require('path').resolve(repoName);
+		let pathToRepo = require('path').resolve(repoPath);
 
 		return Git.Repository.open(pathToRepo)
 			.then(function(repoResult) {
@@ -34,19 +34,17 @@ class gitFunctions {
 			});
 	}
 
-	static getStatus(repoName) {
+	static getStatus(repoPath) {
 
-		repoName = "../"+repoName;
-		let pathToRepo = require('path').resolve(repoName);
+		let pathToRepo = require('path').resolve(repoPath);
 
 		return Git.Repository.open(pathToRepo);
 	}
 
-	static getIndex(repoName) {
+	static getIndex(repoPath) {
 
 		let repo;
-		repoName = "../"+repoName;
-		let pathToRepo = require('path').resolve(repoName);
+		let pathToRepo = require('path').resolve(repoPath);
 
 		return Git.Repository.open(pathToRepo)
 		.then( (repoResult) => {
@@ -179,7 +177,7 @@ class StatusTable extends React.Component {
 
 	componentWillReceiveProps = (newprops) => {
 		// console.log('receive props',this.state.selectAll);
-			this.getStatus(newprops.repo);
+			this.getStatus(newprops.repo.path);
 	}
 
 
