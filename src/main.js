@@ -20,47 +20,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import Git from 'nodegit';
 
-// var pathToRepo = require('path').resolve('../js-reporters');
-
-
-const getCommitsFromRepo = function(repo) {
-
-  let pathToRepo = require('path').resolve(repo);
-  Git.Repository.open(pathToRepo)
-  .then(function(repo) {
-    return repo.getMasterCommit();
-  })
-  .then(function( firstMasterCommit ) {
-    let history = firstMasterCommit.history( Git.Revwalk.SORT.Time);
-    history.on("end", walk);
-    history.start();
-  })
-  .done();
-
-  //   function passed to history.on() listener to receive commits' info. 
-  //   calls the setCommitState of App class to set new state
-  const walk = (commitsArr) => {
-    let commits = [];
-      commitsArr.forEach( function(commit) {
-        commits.push({ 
-          sha: commit.sha(), 
-          author: commit.author().name(),
-          email: commit.author().email(),
-          date: commit.date().toString(),
-          message: commit.message()
-        });
-      });
-
-      const newRepo = {
-        repoName:repo.slice(3),
-        commits: commits
-      };
-
-      this.returnRepo(newRepo);
-  };
-
-}
-
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
 
 class SearchBar extends React.Component {
