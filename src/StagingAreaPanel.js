@@ -261,8 +261,34 @@ class StagingArea extends React.Component {
 		super(props);
 	}
 
-	static refreshIndex(commitId) {
-		console.log('Commit Hash:'+commitId);
+	addToIndex = () => {
+
+		let checkedChanges = [];
+		//reaches into each checkboxWrapper to obtain checked value
+		checkedChanges = this.statusTable.changesList.checkboxRefs.map( (ref, index) => {
+			if(ref !== null)
+				return ref.state.checked;
+		});
+
+		let indexPaths =[];
+
+		this.statusTable.changesList.props.statuses.forEach( (status, index) => {
+
+			//if corresponding checkbox has been checked only
+			if(checkedChanges[index])
+				indexPaths.push(status);
+		});
+
+		// console.log('index',indexPaths);
+
+		window.setTimeout( () => {
+
+			this.setState({
+				indexPaths: indexPaths
+			});
+			// console.log(this.state.indexPaths);
+		}, 0);
+	}
 	}
 
 	getStatus = () => {
