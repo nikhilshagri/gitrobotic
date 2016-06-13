@@ -289,6 +289,53 @@ class StagingArea extends React.Component {
 			// console.log(this.state.indexPaths);
 		}, 0);
 	}
+
+	createCommit = () => {
+
+		let index;
+		let oid;
+
+		let promise = gitFunctions.getIndex(this.props.repo.path);
+		promise = promise.then((indexResult) => {
+			index = indexResult;
+		});
+
+		let filePaths = this.state.indexPaths.map( (status) => {
+			return status.value;
+		});
+
+		// console.log(filePaths);
+
+		//takes in initial promise, uses it to chain a new promise to it, and returns the promise,
+		//which is used in the next iteration
+		promise = filePaths.reduce( (prevPromise, path, currentIndex) => {
+								return prevPromise.then( () => {
+									return index.addByPath(path);
+								});
+							}, promise);
+
+		promise.then(() => {
+		  return index.write();
+		})
+    .then(() => {
+    	console.log(index.entries());
+    })
+    .then(() => {
+    	return index.writeTree();
+    })
+		.then( (oidResult) => {
+			oid = oidResult;
+			console.log('index tree written!');
+		})
+		//until here, all entries were added to the index and an index tree was written
+		//from here, the new commit is generated using the index tree
+		.then( () => {
+			let innerPromise = gitFunctions.createCommit(this.props.repo.path, oid);
+			innerPromise.done(function(commitId) {
+				console.log('Commit Hash:'+commitId);
+			});
+			
+		});
 	}
 
 	getStatus = () => {
