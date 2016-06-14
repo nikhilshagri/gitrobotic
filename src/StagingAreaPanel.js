@@ -259,6 +259,9 @@ class IndexTable extends React.Component {
 class StagingArea extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			indexPaths: []
+		};
 	}
 
 	addToIndex = () => {
@@ -338,8 +341,6 @@ class StagingArea extends React.Component {
 		});
 	}
 
-	getStatus = () => {
-		(globalgetStatus.bind(this))(this.props.repo);
 	}
 
 	render = () => {
