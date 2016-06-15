@@ -22,67 +22,20 @@ import Git from 'nodegit';
 
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
 
-class SearchBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state={ value:props.pathToRepo };
-  }
 
-  updateValue = (event) => {
-    this.setState({
-      value: event.target.value
-    });
-  }
-
-  sendQuery = (event) => {
-    if(!event.which || (event.which && event.which === 13) )
-      this.props.onKeyPress(this.state.value);
-  }
-
-  render() {
-    const style = {
-      margin:10
-    };
-
-    return (
-      <div style={style} >
-        <input type="text" placeholder="Enter Repo name here..." ref="textField" 
-        value={this.state.value} onChange={this.updateValue} onKeyDown={this.sendQuery} />
-        <RaisedButton label="Get Commits!"  onMouseDown={this.sendQuery} />
-      </div>
-    )
   }
 }
-
-class RepoTable extends React.Component {
 
   constructor(props) {
     super(props);
   }
 
-  handleClick = (i) => {
-    this.props.selectRepo(i);
   }
 
-  render() {
-    const style= {
-      margin: 5,
-      cursor: 'pointer'
     };
 
-    let rows = [];
-    this.props.repos.forEach((function(repo, index) {
-        rows.push(
-          <Card style={style} key={index} onMouseDown={this.handleClick.bind(this, index)} >
-            <CardHeader title={repo.repoName} />
-          </Card>
-        );
-    }).bind(this));
     return (
-      <div style={this.props.style} >{rows}</div>
-    )
   }
-}
 
 class App extends React.Component {
   constructor(props) {
@@ -157,8 +110,6 @@ class App extends React.Component {
         height:400
       },
       repos: {
-        flexShrink:3,
-        width: '100%'
       },
       tabs: {
         border:'1px solid black', 
@@ -170,11 +121,8 @@ class App extends React.Component {
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <div>
-          <SearchBar pathToRepo={this.state.pathToRepo} onKeyPress={this.handleKeyPressChange} /> 
           <div style={styles.mainPanel} >
 
-            <RepoTable style={styles.repos} repos={this.state.repos} selectRepo={this.handleRepoClick} />
 
             <Tabs style={styles.tabs} value={this.state.tabValue}  onChange={this.handleTabChange} >
 
