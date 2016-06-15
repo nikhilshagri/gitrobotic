@@ -341,16 +341,33 @@ class StagingArea extends React.Component {
 		});
 	}
 
+	componentWillReceiveProps = (newprops) => {
+		// console.log(newprops);
 	}
 
 	render = () => {
+		const styles = {
+		  block: {
+		    maxWidth: 250,
+		  },
+		  checkbox: {
+		    marginBottom: 16,
+		  },
+		  main: {
+		  	height:350,
+		  	overflow: 'scroll',
+		  	// backgroundColor: 'black'
+		  }
+		};
 		return (
-			<div>
-				<RaisedButton label='Create Commit!' onMouseDown={gitFunctions.refreshIndex.bind(gitFunctions,this.props.repo)} />
-				<RaisedButton label='Get status!' onMouseDown={this.getStatus} />
+			<div style={styles.main} >
+				<RaisedButton label='Create Commit!' onMouseDown={this.createCommit} />			
+				<RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
+				<StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
+				<IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
 			</div>
 		)
-	};
+	}
 }
 
 export default StagingArea;
