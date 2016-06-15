@@ -21,25 +21,78 @@ import Git from 'nodegit';
 
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
 
+class gitFunctions {
+  static repoExists(path) {
+    const pathToRepo = require('path').resolve(path);
 
+    return Git.Repository.open(pathToRepo);
   }
 }
 
+class MainToolbar extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  }
-
+    this.state={
+      toggle: false
     };
+  }
+
+  changeToolbar = (label) => {
+    // console.log(label);
+    this.props.changeToolbar(label);
+  }
+
+  render = () => {
+    const styles = {
+      toolbar:{
+        backgroundColor: 'blue',
+        paddingLeft: '5%',
+        border: '1px solid black',
+        // boxShadow: '10px 10px 10px #888888',
+        zIndex: 100,
+      },
+      button: {
+        position: 'relative',
+        marginRight: 5,
+        marginLeft: 5,
+        backgroundColor: '#CACACA',
+      },
+    };
+    const repoButton = this.props.repoName?<FlatButton style={styles.button} label={this.props.repoName}
+    onMouseDown={this.changeToolbar.bind(this, this.props.repoName)}/>:<div />;
 
     return (
+        <Toolbar style={styles.toolbar} noGutter={false} >
+          <ToolbarGroup firstChild={true} > 
+            <FlatButton style={styles.button} label='Repos' onMouseDown={this.changeToolbar.bind(this, 'Repos')} />
+            {repoButton}
+          </ToolbarGroup>
+        </Toolbar>
+    );
   }
+} 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {  
+      currRepoIndex: -1, 
       repos: [],
+      tabValue: 'CommitTree' ,
+      openWrongDirSnackBar: false,
+
+      dynStyle: {
+        repoList: {
+          // border: '10px solid black',
+          display: 'inline',
+          // zIndex: 1
+        },
+        repoPage: {
+          // border: '10px solid red',
+          display:'none',
+          // zIndex: 0
+        }
+      }
     };
   }
 
