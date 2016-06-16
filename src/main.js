@@ -10,6 +10,9 @@ import FlatButton from 'material-ui/FlatButton';
 import keycode from 'keycode';
 import ActivityArea from './ActivityArea';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import Paper from 'material-ui/Paper';
+import Snackbar from 'material-ui/Snackbar';
 
 import CommitTree from './CommitTreePanel';
 import StagingArea from './StagingAreaPanel';
@@ -225,15 +228,34 @@ class App extends React.Component {
         height:800
       },
       repos: {
+        ...this.state.dynStyle.repoList,
       },
       tabs: {
+        ...this.state.dynStyle.repoPage,
+        overflow: 'hidden', 
+        width: '50%',
+      },
+      font: {
+        fontFamily: '"Roboto", sans-serif',
+      },
     };
 
+    const wrongDirError = 'Could not find a git repository in the folder. Make sure you have selected the correct folder';
 
+
+    // console.log('name',this.state.repos[this.state.currRepoIndex].name);
+    let renderRepo = this.state.repos[this.state.currRepoIndex]?this.state.repos[this.state.currRepoIndex]:null;
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
+        <div style={{width: '100%'}} >
+          <MainToolbar repoName={renderRepo? renderRepo.name: ''} changeToolbar={this.changeToolbar} />
           <div style={styles.mainPanel} >
 
+            <Repo style={styles.repos} repos={this.state.repos} pathToRepo={renderRepo? renderRepo.path: ''}
+            selectRepo={this.handleRepoClick} onKeyPress={this.handleKeyPressChange}/>
+
+            <Snackbar open={this.state.openWrongDirSnackBar} message={wrongDirError} autoHideDuration={4000}
+              style={styles.font} onRequestClose={this.handleRequestClose}/>
 
             <Tabs style={styles.tabs} value={this.state.tabValue}  onChange={this.handleTabChange} >
 
