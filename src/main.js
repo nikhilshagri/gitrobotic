@@ -103,21 +103,114 @@ class App extends React.Component {
   }
 
   handleKeyPressChange = (passedPath) => {
+    //TODO: Check if passed path is valid or not
+    console.log(passedPath);
+    //extracts the name of the repo from the path name
+    const repoName = passedPath.slice(passedPath.lastIndexOf('/')+1);
+    let flag = false;
+    let pos;
+
+    this.state.repos.forEach( (repo, index) => {
+
+      //if repo already exists in the state
+      if(repo.path === passedPath) {
+        pos = index;
+        flag = true;
+      }
+    });
+
+    if( flag ) {
+      // console.log('true');
+      this.setState({
+        currRepoIndex: pos
+      });
     }
+    else
+    {
+      // console.log('false');
+      //checks if the folder contains a git repo
+      let promise = gitFunctions.repoExists(passedPath);
+      promise.then( () => {
+        let repos = this.state.repos;
+        repos.push({
+          name: repoName,
+          path: passedPath
+        });
+        let repoIndex = repos.length - 1;
+        // console.log(repoIndex);
 
+        this.setState({
+          currRepoIndex: repoIndex,
+          repos: repos
+        });
+        this.changeToolbar(repoName);
+      })
+      .catch( (failure) => {
+        console.log('Could not find a git repository in the folder',
+          'Make sure you have selected the correct folder');
+        console.log('failure',failure);
+        this.setState({
+          openWrongDirSnackBar: true
+        });
+      });
+      // console.log(this.state);
     }
   }
 
+  handleRepoClick = (index) => {
+    window.setTimeout( () => {
+      this.setState({
+        currRepoIndex: index
+      });
+      this.changeToolbar(this.state.repos[index].name);
+    },0);
   }
 
+  changeToolbar = (label) => {
+    // console.log('in app',label);
+    if(label ==='Repos') {
+      this.setState({
+        dynStyle: {
+          repoList: {
+            display:'inline',
+            // zIndex: 1
+          },
+          repoPage: {
+            display:'none',
+            // zIndex: 0
+          }
+        }
+      });
+    }
+    else
+    {
+     this.setState({
+      dynStyle: {
+        repoList: {
+          display:'none',
+          // zIndex: 1
+        },
+        repoPage: {
+          display:'inline',
+          // zIndex: 0
+        }
+      }
+    });     
+    }
   }
 
+  handleRequestClose = () => {
     this.setState({
+      openWrongDirSnackBar: false 
     });
   }
 
   componentWillMount = () => {
     injectTapEventPlugin();
+  }
+
+  componentWillReceiveProps = (newprops) => {
+    // console.log(newprops);
   }
 
   //for dev prurposes only
