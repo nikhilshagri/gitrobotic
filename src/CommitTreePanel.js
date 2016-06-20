@@ -161,6 +161,87 @@ class Diff extends React.Component {
     );
   }
 }
+
+class DiffPanel extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render = () => {
+    // console.log('rendering now!');
+
+    let diffs = [];
+    //stores all the diffs in ONE file
+    let currDiff = [];
+    let currDiffFile = ''; 
+
+    //iterate through all lines while pushing all individual
+    //files' diffs into another array of diffs
+    this.props.diffs.forEach( (line, index, arr) => {
+
+      let filePath = arr[index + 1];
+      if(filePath)
+        filePath.trim();
+
+      if(line.trim() === 'diff' && filePath !== currDiffFile) {
+        diffs.push({lines: currDiff, path: currDiffFile});
+        currDiffFile = filePath;
+        currDiff = [];
+      }
+      else 
+        currDiff.push(line);
+
+    });
+    //pushing in the last file's diff as well
+    diffs.push({lines: currDiff, path: currDiffFile});
+    diffs.splice(0, 1);
+
+    let difftree = diffs.map((diff, index) => {
+      return (<Diff diff={diff} key={index} />);
+    });
+
+    const styles = {
+      main: {
+        width: '100%',
+        border: '1px solid black',
+      },
+    };
+    return(
+      <div style={styles.main}>{difftree}</div>
+    );
+  }
+}
+
+class CommitInfo extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render = () => {
+    let commit = '';
+    if(this.props.commit) {
+      commit = this.props.commit;
+    }
+
+    // console.log(commit);
+    const styles= {
+      font: {
+        fontFamily: '"Roboto", sans-serif',
+        fontSize: 15,
+      },
+    };
+    return (
+      <div style={{border: '1px solid black' }} >
+        <p style={styles.font} ><b>{commit.author}</b></p>
+        <p style={styles.font} >{commit.sha}</p>
+        <p style={styles.font} >{commit.message}</p>
+        <p style={styles.font} >{commit.date}</p>
+      </div>
+    );
+  }
+}
+
 class CommitTree extends React.Component {
   render() {
 
@@ -176,6 +257,11 @@ class CommitTree extends React.Component {
     });
     return (
       <div style={style}>{ rows }</div>
+      <div style={{display: 'flex'}} >
+        <div style={{width: '55%'}}>
+          <DiffPanel diffs={this.state.diffs} />
+        </div>
+      </div>
     )
   }
 }
