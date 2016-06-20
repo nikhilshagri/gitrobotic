@@ -6,6 +6,38 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FolderIcon from 'material-ui/svg-icons/file/folder';
 import Paper from 'material-ui/Paper';
 
+class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state={ value:props.pathToRepo };
+  }
+
+  updateValue = (event) => {
+    this.setState({
+      value: event.target.value
+    });
+  }
+
+  sendQuery = (event) => {
+    if(!event.which || (event.which && event.which === 13) )
+      this.props.onKeyPress(this.state.value);
+  }
+
+  render() {
+    const style = {
+      margin:10
+    };
+
+    return (
+      <div style={style} >
+        <input style={{width: 300, height: 30, fontSize: 20}} type="text" placeholder="Enter Repo path here..." ref="textField" 
+        value={this.state.value} onChange={this.updateValue} onKeyDown={this.sendQuery} />
+        <RaisedButton label="Get Commits!"  onMouseDown={this.sendQuery} />
+      </div>
+    )
+  }
+}
+
 class Repo extends React.Component {
 	constructor(props) {
 		super(props);
@@ -70,6 +102,7 @@ class Repo extends React.Component {
 							</Paper>
 							<p style={styles.para1} >OR..</p>
 							<p style={styles.para2} >enter absolute path to repository:</p>
+							<SearchBar pathToRepo={this.props.pathToRepo} onKeyPress={this.props.onKeyPress} />
 						</div>
 					</div>
 				</div>
