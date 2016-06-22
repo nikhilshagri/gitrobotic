@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import SidePanel from './utils/SidePanel';
 import DiffPanel from './utils/DiffPanel';
 
 import Git from 'nodegit';
@@ -118,6 +119,12 @@ class CommitTree extends React.Component {
       border:'1px solid black', 
       overflow: 'auto', 
       width: '100%' 
+      sidePanel: {
+        width: '15%',
+        border: '1px solid black',
+        backgroundColor: 'grey',
+        marginRight: 10,
+      }
     };
 
     let rows=[];
@@ -127,6 +134,9 @@ class CommitTree extends React.Component {
     return (
       <div style={style}>{ rows }</div>
       <div style={{display: 'flex'}} >
+        <div style={styles.sidePanel} >
+          <SidePanel {...this.props} />
+        </div>
         <div style={{width: '55%'}}>
           <DiffPanel diffs={this.state.diffs} />
         </div>
