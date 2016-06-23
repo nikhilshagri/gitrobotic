@@ -8,7 +8,6 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import keycode from 'keycode';
-import ActivityArea from './ActivityArea';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
