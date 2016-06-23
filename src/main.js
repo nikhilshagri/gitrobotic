@@ -15,9 +15,8 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import Paper from 'material-ui/Paper';
 import Snackbar from 'material-ui/Snackbar';
 
-import CommitTree from './CommitTreePanel';
-import StagingArea from './StagingAreaPanel';
 import Repo from './RepoPanel';
+import RepoOps from './RepoOps';
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -83,7 +82,6 @@ class App extends React.Component {
     this.state = {  
       currRepoIndex: -1, 
       repos: [],
-      tabValue: 'CommitTree' ,
       openWrongDirSnackBar: false,
 
       dynStyle: {
@@ -99,12 +97,6 @@ class App extends React.Component {
         }
       }
     };
-  }
-
-  handleTabChange = (value) => {
-    this.setState({
-      tabValue: value
-    });
   }
 
   handleKeyPressChange = (passedPath) => {
@@ -259,17 +251,7 @@ class App extends React.Component {
             <Snackbar open={this.state.openWrongDirSnackBar} message={wrongDirError} autoHideDuration={4000}
               style={styles.font} onRequestClose={this.handleRequestClose}/>
 
-            <Tabs style={styles.tabs} value={this.state.tabValue}  onChange={this.handleTabChange} >
-
-              <Tab label="Commits" value="CommitTree" >
-                <CommitTree repo={renderRepo} />
-              </Tab>
-
-              <Tab label="Staging Area" value="StagingArea" >
-                <StagingArea repo={renderRepo} />
-              </Tab>
-
-            </Tabs>
+            <RepoOps style={styles.tabs} repo={renderRepo} />
           </div>
         </div>
       </MuiThemeProvider>
