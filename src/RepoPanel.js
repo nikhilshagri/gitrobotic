@@ -6,6 +6,54 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FolderIcon from 'material-ui/svg-icons/file/folder';
 import Paper from 'material-ui/Paper';
 
+
+// import {dialog} from 'electron';
+const {dialog} = require('electron').remote;
+
+class RepoTable extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  handleClick = (i) => {
+    this.props.selectRepo(i);
+  }
+
+  render() {
+    const styles= {
+      card:{
+        margin: 5,
+        marginTop: 10,
+        cursor: 'pointer',
+        backgroundColor: '#C6C6C6',
+        // width: '30%',
+      },
+      main:{
+        width: '20%',
+        height: '100%',
+        // backgroundColor: 'black',
+        // borderTop: '1px solid #464646',
+        boxShadow: '7px 7px 7px #FFFFFF',
+      }
+    };
+
+    let rows = [];
+    this.props.repos.forEach((function(repo, index) {
+        rows.push(
+          <Card style={styles.card} key={index} onMouseDown={this.handleClick.bind(this, index)} >
+            <CardHeader title={repo.name} />
+          </Card>
+        );
+    }).bind(this));
+    return (
+        <div style={styles.main} >
+          {rows}
+        </div>
+    )
+  }
+}
+
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
