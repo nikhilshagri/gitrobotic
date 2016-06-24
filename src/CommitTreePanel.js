@@ -106,10 +106,6 @@ class Commit extends React.Component {
   }
 }
 
-
-
-
-
 class CommitInfo extends React.Component {
 
   constructor(props) {
@@ -212,25 +208,33 @@ class CommitTree extends React.Component {
   }
   render() {
 
-    const style={
-      border:'1px solid black', 
-      overflow: 'auto', 
-      width: '100%' 
-      sidePanel: {
-        width: '15%',
-        border: '1px solid black',
-        backgroundColor: 'grey',
-        marginRight: 10,
-      }
+    const styles={
+      commits: {
+        border:'1px solid black',
+        overflow: 'scroll',
+        width: '25%',
+        height: 350,
+      },
+      commitLine: {
+        backgroundColor: 'red',
+        position: 'absolute',
+        width: 3,
+        height: '100%',
+        top: '6%',
+        left: '1.7%',
+      },
     };
 
+
     let rows=[];
-    this.props.commits.forEach(function(commit, index) {
-      rows.push(<Commit commit={commit} key={index} />);
+    this.state.commits.forEach((commit, index) => {
+      rows.push(<Commit getCommitDiff={this.getCommitDiff} commit={commit} key={index} />);
     });
     return (
-      <div style={style}>{ rows }</div>
       <div style={{display: 'flex'}} >
+        <div style={styles.commits}>
+          {/*<div><div style={styles.commitLine} /></div>*/}
+          { rows }
         </div>
         <div style={{width: '55%'}}>
           <CommitInfo commit={this.state.selected_commit} />
