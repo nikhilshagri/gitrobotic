@@ -60,6 +60,22 @@ class Commit extends React.Component {
         </Card>
       </div>
     )
+  static getCommitDiff(sha, path) {
+    // console.log(sha);
+    // console.log(path);
+    return Git.Repository.open(require('path').resolve(path))
+    .then(function(repo) {
+      return repo.getCommit(sha);
+    })
+    .then(function(commit) {
+      // console.log("commit " + commit.sha());
+      // console.log("Author:", commit.author().name() +
+      //   " <" + commit.author().email() + ">");
+      // console.log("Date:", commit.date());
+      // console.log("\n    " + commit.message());
+
+      return commit.getDiff();
+    });
   }
 }
 
