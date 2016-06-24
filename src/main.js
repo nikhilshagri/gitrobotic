@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, Link } from 'react-router'
+import { Router, Route, Link, hashHistory } from 'react-router'
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
@@ -62,13 +62,22 @@ class MainToolbar extends React.Component {
         backgroundColor: '#CACACA',
       },
     };
-    const repoButton = this.props.repoName?<FlatButton style={styles.button} label={this.props.repoName}
-    onMouseDown={this.changeToolbar.bind(this, this.props.repoName)}/>:<div />;
+    const repoButton = this.props.repoName?
+                        <FlatButton style={styles.button}
+                          label={this.props.repoName}
+                          containerElement={<Link to='/repoOps' />}
+                          linkButton={true} />
+                          :<div />;
 
     return (
         <Toolbar style={styles.toolbar} noGutter={false} >
-          <ToolbarGroup firstChild={true} > 
-            <FlatButton style={styles.button} label='Repos' onMouseDown={this.changeToolbar.bind(this, 'Repos')} />
+          <ToolbarGroup firstChild={true} >
+
+            <FlatButton style={styles.button}
+            containerElement={<Link to='/repo' />}
+            label='Repos'
+            linkButton={true} />
+
             {repoButton}
           </ToolbarGroup>
         </Toolbar>
@@ -83,19 +92,6 @@ class App extends React.Component {
       currRepoIndex: -1, 
       repos: [],
       openWrongDirSnackBar: false,
-
-      dynStyle: {
-        repoList: {
-          // border: '10px solid black',
-          display: 'inline',
-          // zIndex: 1
-        },
-        repoPage: {
-          // border: '10px solid red',
-          display:'none',
-          // zIndex: 0
-        }
-      }
     };
   }
 
@@ -164,36 +160,7 @@ class App extends React.Component {
   }
 
   changeToolbar = (label) => {
-    // console.log('in app',label);
-    if(label ==='Repos') {
-      this.setState({
-        dynStyle: {
-          repoList: {
-            display:'inline',
-            // zIndex: 1
-          },
-          repoPage: {
-            display:'none',
-            // zIndex: 0
-          }
-        }
-      });
-    }
-    else
-    {
-     this.setState({
-      dynStyle: {
-        repoList: {
-          display:'none',
-          // zIndex: 1
-        },
-        repoPage: {
-          display:'inline',
-          // zIndex: 0
-        }
-      }
-    });     
-    }
+
   }
 
   handleRequestClose = () => {
@@ -222,10 +189,8 @@ class App extends React.Component {
         height:800
       },
       repos: {
-        ...this.state.dynStyle.repoList,
       },
       tabs: {
-        ...this.state.dynStyle.repoPage,
         overflow: 'hidden', 
         width: '50%',
       },
@@ -236,22 +201,38 @@ class App extends React.Component {
 
     const wrongDirError = 'Could not find a git repository in the folder. Make sure you have selected the correct folder';
 
-
     // console.log('name',this.state.repos[this.state.currRepoIndex].name);
     let renderRepo = this.state.repos[this.state.currRepoIndex]?this.state.repos[this.state.currRepoIndex]:null;
+
+    let children = React.Children.map( this.props.children, child => {
+      if(child.type === Repo) {
+
+        return React.cloneElement(child, {
+          repos: this.state.repos,
+          pathToRepo: renderRepo? renderRepo.path: '',
+          selectRepo: this.handleRepoClick,
+          onKeyPress: this.handleKeyPressChange,
+        });
+
+      }
+      else if(child.type === RepoOps) {
+
+        return React.cloneElement(child, {
+          repo: renderRepo,
+        });
+
+      }
+    });
+
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div style={{width: '100%'}} >
-          <MainToolbar repoName={renderRepo? renderRepo.name: ''} changeToolbar={this.changeToolbar} />
+          <MainToolbar repoName={renderRepo? renderRepo.name: ''} />
           <div style={styles.mainPanel} >
-
-            <Repo style={styles.repos} repos={this.state.repos} pathToRepo={renderRepo? renderRepo.path: ''}
-            selectRepo={this.handleRepoClick} onKeyPress={this.handleKeyPressChange}/>
-
-            <Snackbar open={this.state.openWrongDirSnackBar} message={wrongDirError} autoHideDuration={4000}
-              style={styles.font} onRequestClose={this.handleRequestClose}/>
-
-            <RepoOps style={styles.tabs} repo={renderRepo} />
+          <Snackbar open={this.state.openWrongDirSnackBar} message={wrongDirError} autoHideDuration={4000}
+          style={styles.font} onRequestClose={this.handleRequestClose}/>
+          {children || <Repo style={styles.repos} repos={this.state.repos} pathToRepo={renderRepo? renderRepo.path: ''}
+            selectRepo={this.handleRepoClick} onKeyPress={this.handleKeyPressChange}/>}
           </div>
         </div>
       </MuiThemeProvider>
@@ -261,6 +242,13 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <App />,
+  <Router history={hashHistory}>
+
+    <Route path="/" component={App} >
+      <Route path='/repo' component={Repo} />
+      <Route path='/repoOps' component={RepoOps} />
+    </Route>
+
+  </Router>,
   document.getElementById('app')
 );
