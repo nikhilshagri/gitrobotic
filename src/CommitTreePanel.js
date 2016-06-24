@@ -1,6 +1,5 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import SidePanel from './utils/SidePanel';
 import CircleIcon from 'material-ui/svg-icons/av/fiber-manual-record';
 
 import DiffPanel from './utils/DiffPanel';
@@ -163,10 +162,9 @@ class CommitTree extends React.Component {
     return (
       <div style={style}>{ rows }</div>
       <div style={{display: 'flex'}} >
-        <div style={styles.sidePanel} >
-          <SidePanel {...this.props} />
         </div>
         <div style={{width: '55%'}}>
+          <CommitInfo commit={this.state.selected_commit} />
           <DiffPanel diffs={this.state.diffs} />
         </div>
       </div>
