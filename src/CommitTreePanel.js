@@ -1,6 +1,8 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import SidePanel from './utils/SidePanel';
+import CircleIcon from 'material-ui/svg-icons/av/fiber-manual-record';
+
 import DiffPanel from './utils/DiffPanel';
 
 import Git from 'nodegit';
@@ -41,25 +43,7 @@ class gitFunctions {
     }).bind(that);
 
   }
-}
 
-class Commit extends React.Component {
-  render() {
-    var commit = this.props.commit;
-    return (
-      <div >
-        <Card style={ {margin:5} } >
-          <CardHeader title={commit.author} subtitle={commit.message}
-          actAsExpander={true} 
-          showExpandableButton={true} />
-          <CardText  expandable={true} >
-            <p>{commit.email}</p>
-            <p>{commit.sha}</p>
-            <p>{commit.date}</p>
-          </CardText>
-        </Card>
-      </div>
-    )
   static getCommitDiff(sha, path) {
     // console.log(sha);
     // console.log(path);
@@ -79,18 +63,47 @@ class Commit extends React.Component {
   }
 }
 
+class Commit extends React.Component {
   constructor(props) {
     super(props);
   }
 
+  handleOnClick = (commit) => {
 
+    this.props.getCommitDiff(commit);
 
+    // gitFunctions.getCommitDiff(commit.sha, this.props.repoPath);
 
+  }
 
+  render() {
+    const styles={
+      span: {
+        fontWeight: 900,
       },
+      commitDiv: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        fontFamily: '"Roboto", sans-serif',
+        padding: 10,
+        margin: 9,
+        boxShadow: '2px 2px 2px #888888',
+      },
+      circleIcon: {
+        width: 13,
+        height: 13,
+      }
     };
+    const commit = this.props.commit;
 
     return (
+      <div style={styles.commitDiv} onClick={() => { this.handleOnClick(commit) }} >
+        <CircleIcon style={styles.circleIcon} color='red'/>
+        <span style={styles.span} >{'   '+commit.author}</span>:
+        {commit.message}
+      </div>
+    )
   }
 }
 
