@@ -25,7 +25,6 @@ class SidePanel extends React.Component {
   }
 
   componentWillReceiveProps = (newprops) => {
-    if(newprops.repo.path && newprops.repo !== this.props.repo) {
 
       let refsData = [];
       let repoTop;
@@ -59,7 +58,6 @@ class SidePanel extends React.Component {
         });
         console.log('done');
       });
-    }
   }
 
   render = () => {
