@@ -141,6 +141,75 @@ class CommitInfo extends React.Component {
 }
 
 class CommitTree extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      commits: [],
+      diffs: [],
+      selected_commit: '',
+    };
+    this.getCommitDiff = this.getCommitDiff.bind(this);
+  }
+
+  getCommitDiff = (commit) => {
+
+    //for CommitInfo component
+    this.setState({
+      selected_commit: commit,
+    });
+
+    let diffArr = [];
+    let promise = gitFunctions.getCommitDiff(commit.sha, this.props.repo.path);
+    promise.done((diffList) => {
+      diffList.forEach((diff) => {
+        diff.patches().then((patches) => {
+          patches.forEach((patch) => {
+            // console.log(patch.lineStats());
+            patch.hunks().then((hunks) => {
+              hunks.forEach((hunk) => {
+                hunk.lines().then((lines) => {
+                  diffArr.push("diff", patch.oldFile().path(),
+                    patch.newFile().path());
+                    // console.log("diff", patch.oldFile().path(),
+                    //   patch.newFile().path());
+                  diffArr.push(hunk.header());
+                  // console.log(hunk.header());
+                  lines.forEach(function(line) {
+                    // console.log(String.fromCharCode(line.origin()));
+                    diffArr.push(String.fromCharCode(line.origin())+
+                      line.content());
+                    // console.log(String.fromCharCode(line.origin()) +
+                    // line.content());
+                  });
+                })
+                .done( () => {
+                  this.setState({
+                    diffs: diffArr,
+                    });
+                });
+              });
+            });
+          });
+        });
+      });
+      // console.log(this);
+
+    });
+
+  }
+
+  returnRepo = (commits) => {
+    // console.log('repo',repo);
+    this.setState({
+      commits : commits
+    });
+  }
+
+  componentWillReceiveProps = (newprops) => {
+    // console.log('newprops',newprops);
+    if(newprops.repo)
+      gitFunctions.getCommits(newprops.repo.path, this);
+  }
   render() {
 
     const style={
