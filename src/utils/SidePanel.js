@@ -64,15 +64,24 @@ class SidePanel extends React.Component {
 
     let locals = [];
     let remotes = [];
-    console.log(this.state.refsData);
+
     this.state.refsData.forEach( (ref, index) => {
       if(ref.type === 1)
         locals.push(<ListItem key={index} primaryText={ref.name} />);
       else
         remotes.push(<ListItem key={index} primaryText={ref.name} />);
     });
+
+    const styles = {
+      main: {
+        ...this.props.styleInherited,
+        border: '1px solid black',
+        backgroundColor: 'grey',
+        marginRight: 10,
+      },
+    };
     return (
-    <div>
+    <div style={styles.main} >
       <List>
         <Subheader>Working Directory</Subheader>
       </List>

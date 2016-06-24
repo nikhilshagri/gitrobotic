@@ -20,8 +20,12 @@ class RepoOps extends React.Component {
   }
 
   render = () => {
+      sidePanel: {
+        width: '20%',
+      },
     return (
       <Tabs style={this.props.style} value={this.state.tabValue}  onChange={this.handleTabChange} >
+        <SidePanel {...this.props} styleInherited={styles.sidePanel} />
 
         <Tab label="Commits" value="CommitTree" >
           <CommitTree repo={this.props.repo} />
