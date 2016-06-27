@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {Tabs, Tab} from 'material-ui/Tabs';
-
 import SidePanel from './utils/SidePanel';
 import CommitTree from './CommitTreePanel';
 import StagingArea from './StagingAreaPanel';
@@ -14,13 +12,15 @@ class RepoOps extends React.Component {
     };
   }
 
-  handleTabChange = (value) => {
-    this.setState({
-      tabValue: value
-    });
-  }
-
   render = () => {
+
+    let children = React.Children.map( this.props.children, child => {
+
+        return React.cloneElement(child, {
+          repo: this.props.repo,
+        });
+    });
+
     const styles = {
       main: {
         display: 'flex',
@@ -37,17 +37,9 @@ class RepoOps extends React.Component {
     return (
       <div style={styles.main} >
         <SidePanel {...this.props} styleInherited={styles.sidePanel} />
-        <Tabs style={styles.tabs} value={this.state.tabValue}  onChange={this.handleTabChange} >
-
-          <Tab label="Commits" value="CommitTree" >
-            <CommitTree repo={this.props.repo} />
-          </Tab>
-
-          <Tab label="Staging Area" value="StagingArea" >
-            <StagingArea repo={this.props.repo} />
-          </Tab>
-
-        </Tabs>
+        <div style={styles.tabs} >
+          {children || <CommitTree repo={this.props.repo} />}
+        </div>
       </div>
     );
   }

@@ -17,6 +17,9 @@ import Snackbar from 'material-ui/Snackbar';
 
 import Repo from './RepoPanel';
 import RepoOps from './RepoOps';
+import CommitTree from './CommitTreePanel';
+import StagingArea from './StagingAreaPanel';
+
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -246,7 +249,12 @@ ReactDOM.render(
 
     <Route path="/" component={App} >
       <Route path='/repo' component={Repo} />
-      <Route path='/repoOps' component={RepoOps} />
+
+      <Route path='/repoOps' component={RepoOps} >
+        <Route path='/repoOps/commitTree' component={CommitTree} />
+        <Route path='/repoOps/stagingArea' component={StagingArea} />
+      </Route>
+
     </Route>
 
   </Router>,

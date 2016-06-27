@@ -1,8 +1,11 @@
 import React from 'react';
 
+import { Link } from 'react-router'
+
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
+import FlatButton from 'material-ui/FlatButton';
 
 import Git from 'nodegit';
 
@@ -24,40 +27,48 @@ class SidePanel extends React.Component {
     }
   }
 
-  componentWillReceiveProps = (newprops) => {
+  getBranchRefs = (props) => {
+    let refsData = [];
+    let repoTop;
+    let promise = GitFunctions.getBranchRefs(props.repo.path);
 
-      let refsData = [];
-      let repoTop;
-      let promise = GitFunctions.getBranchRefs(newprops.repo.path);
+    promise.then( (repo) => {
+      repoTop = repo;
+      return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
+    })
+    .then( (referenceNames) => {
 
-      promise.then( (repo) => {
-        repoTop = repo;
-        return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
-      })
-      .then( (referenceNames) => {
+      let promises = [];
 
-        let promises = [];
-
-        referenceNames.forEach( (referenceName) => {
-          promises.push(repoTop.getReference(referenceName).then( (reference) => {
-            if (reference.isConcrete()) {
-              // console.log("Reference target:", referenceName, reference.target());
-              refsData.push({name: reference.shorthand(), type: reference.isBranch() });
-            } else if (reference.isSymbolic()) {
-              // console.log("Reference symbtarget:", referenceName, reference.symbolicTarget());
-            }
-          }));
-        });
-
-        return Promise.all(promises);
-      })
-      .done(() => {
-        console.log('refsData',refsData);
-        this.setState({
-          refsData: refsData,
-        });
-        console.log('done');
+      referenceNames.forEach( (referenceName) => {
+        promises.push(repoTop.getReference(referenceName).then( (reference) => {
+          if (reference.isConcrete()) {
+            // console.log("Reference target:", referenceName, reference.target());
+            refsData.push({name: reference.shorthand(), type: reference.isBranch() });
+          } else if (reference.isSymbolic()) {
+            // console.log("Reference symbtarget:", referenceName, reference.symbolicTarget());
+          }
+        }));
       });
+
+      return Promise.all(promises);
+    })
+    .done(() => {
+      // console.log('refsData',refsData);
+      this.setState({
+        refsData: refsData,
+      });
+      console.log('done');
+    });
+  }
+
+  componentDidMount = () => {
+    console.log('mounting!');
+    if(this.props.repo)
+      this.getBranchRefs(this.props);
+  }
+
+  componentWillReceiveProps = (newprops) => {
   }
 
   render = () => {
@@ -84,6 +95,14 @@ class SidePanel extends React.Component {
     <div style={styles.main} >
       <List>
         <Subheader>Working Directory</Subheader>
+        <FlatButton
+          label='CommitTree'
+          containerElement={<Link to='repoOps/commitTree' />}
+          linkButton={true} />
+        <FlatButton
+          label='Staging Area'
+          containerElement={<Link to='repoOps/stagingArea' />}
+          linkButton={true} />
       </List>
       <Divider />
       <List>

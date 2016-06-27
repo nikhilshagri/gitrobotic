@@ -201,10 +201,12 @@ class CommitTree extends React.Component {
     });
   }
 
+  componentDidMount = () => {
+    if(this.props.repo)
+    gitFunctions.getCommits(this.props.repo.path, this);
+  }
+
   componentWillReceiveProps = (newprops) => {
-    // console.log('newprops',newprops);
-    if(newprops.repo)
-      gitFunctions.getCommits(newprops.repo.path, this);
   }
   render() {
 
