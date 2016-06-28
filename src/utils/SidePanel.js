@@ -12,6 +12,11 @@ class SidePanel extends React.Component {
     super(props);
   }
 
+  listItemClick = (ref) => {
+    console.log(ref);
+    this.props.setCurrentBranchCB(ref);
+  }
+
   componentWillReceiveProps = (newprops) => {
   }
 
@@ -24,10 +29,12 @@ class SidePanel extends React.Component {
 
       // console.log('ref:',ref);
 
+      const listItem = <ListItem key={index} primaryText={ref.name} onClick={() => this.listItemClick(ref)} />;
+
       if(ref.type === 'LOCAL')
-        locals.push(<ListItem key={index} primaryText={ref.name} />);
+        locals.push(listItem);
       else if(ref.name.match(/\/+/g))
-        remotes.push(<ListItem key={index} primaryText={ref.name} />);
+        remotes.push(listItem);
     });
 
     const styles = {

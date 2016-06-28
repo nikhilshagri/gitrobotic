@@ -22,6 +22,7 @@ class RepoOps extends React.Component {
     this.state = {
       tabValue: 'CommitTree',
       refsData: [],
+      currBranchRef: {},
     };
   }
 
@@ -29,6 +30,7 @@ class RepoOps extends React.Component {
     let refsData = [];
     let repoTop;
     let promise = GitFunctions.getBranchRefs(props.repo.path);
+    let currBranchRef;
 
     promise.then( (repo) => {
       repoTop = repo;
@@ -41,11 +43,17 @@ class RepoOps extends React.Component {
       referenceNames.forEach( (referenceName) => {
         promises.push(repoTop.getReference(referenceName).then( (reference) => {
           if (reference.isConcrete()) {
-            refsData.push({
+
+            const refObj = {
               name: reference.shorthand(),
               type: reference.isBranch()?'LOCAL':'NOT LOCAL',
               sha: reference.target().tostrS()
-            });
+            };
+
+            if(refObj.name === 'master')
+              currBranchRef = refObj;
+            refsData.push(refObj);
+
           } else if (reference.isSymbolic()) {
             // console.log("Reference symbtarget:", referenceName, reference.symbolicTarget());
           }
@@ -55,11 +63,18 @@ class RepoOps extends React.Component {
       return Promise.all(promises);
     })
     .done(() => {
-      console.log(refsData);
+      // console.log(currBranchRef);
       this.setState({
         refsData: refsData,
+        currBranchRef: currBranchRef
       });
       console.log('done');
+    });
+  }
+
+  setCurrentBranchCB = (ref) => {
+    this.setState({
+      currBranch: ref,
     });
   }
 
@@ -93,7 +108,10 @@ class RepoOps extends React.Component {
 
     return (
       <div style={styles.main} >
-        <SidePanel {...this.props} styleInherited={styles.sidePanel} refsData={this.state.refsData} />
+        <SidePanel {...this.props}
+          styleInherited={styles.sidePanel}
+          refsData={this.state.refsData}
+          setCurrentBranchCB={this.setCurrentBranchCB} />
         <div style={styles.tabs} >
           {children || <CommitTree repo={this.props.repo} />}
         </div>
