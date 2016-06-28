@@ -214,7 +214,7 @@ class CommitTree extends React.Component {
       commits: {
         border:'1px solid black',
         overflow: 'scroll',
-        width: '25%',
+        width: '35%',
         height: 350,
       },
       commitLine: {
@@ -238,7 +238,7 @@ class CommitTree extends React.Component {
           {/*<div><div style={styles.commitLine} /></div>*/}
           { rows }
         </div>
-        <div style={{width: '55%'}}>
+        <div style={{width: '65%'}}>
           <CommitInfo commit={this.state.selected_commit} />
           <DiffPanel diffs={this.state.diffs} />
         </div>
