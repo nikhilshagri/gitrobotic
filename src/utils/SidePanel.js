@@ -44,7 +44,7 @@ class SidePanel extends React.Component {
         promises.push(repoTop.getReference(referenceName).then( (reference) => {
           if (reference.isConcrete()) {
             // console.log("Reference target:", referenceName, reference.target());
-            refsData.push({name: reference.shorthand(), type: reference.isBranch() });
+            refsData.push({name: reference.shorthand(), type: reference.isBranch()?'LOCAL':'REMOTE' });
           } else if (reference.isSymbolic()) {
             // console.log("Reference symbtarget:", referenceName, reference.symbolicTarget());
           }
@@ -77,7 +77,7 @@ class SidePanel extends React.Component {
     let remotes = [];
 
     this.state.refsData.forEach( (ref, index) => {
-      if(ref.type === 1)
+      if(ref.type === 'LOCAL')
         locals.push(<ListItem key={index} primaryText={ref.name} />);
       else
         remotes.push(<ListItem key={index} primaryText={ref.name} />);
