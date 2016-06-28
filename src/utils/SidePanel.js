@@ -7,68 +7,9 @@ import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton';
 
-import Git from 'nodegit';
-
-class GitFunctions {
-  static getBranchRefs(repoPath) {
-    // the name of the function says that it gets refs, but
-    // the function actually returns an 'open repo' promise only
-    const pathToRepo = require('path').resolve(repoPath);
-    return Git.Repository.open(repoPath);
-
-  }
-}
-
 class SidePanel extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      refsData: [],
-    }
-  }
-
-  getBranchRefs = (props) => {
-    let refsData = [];
-    let repoTop;
-    let promise = GitFunctions.getBranchRefs(props.repo.path);
-
-    promise.then( (repo) => {
-      repoTop = repo;
-      return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
-    })
-    .then( (referenceNames) => {
-
-      let promises = [];
-
-      referenceNames.forEach( (referenceName) => {
-        promises.push(repoTop.getReference(referenceName).then( (reference) => {
-          if (reference.isConcrete()) {
-            refsData.push({
-              name: reference.shorthand(),
-              type: reference.isBranch()?'LOCAL':'NOT LOCAL',
-              sha: reference.target().tostrS()
-            });
-          } else if (reference.isSymbolic()) {
-            // console.log("Reference symbtarget:", referenceName, reference.symbolicTarget());
-          }
-        }));
-      });
-
-      return Promise.all(promises);
-    })
-    .done(() => {
-      console.log(refsData);
-      this.setState({
-        refsData: refsData,
-      });
-      console.log('done');
-    });
-  }
-
-  componentDidMount = () => {
-    console.log('mounting!');
-    if(this.props.repo)
-      this.getBranchRefs(this.props);
   }
 
   componentWillReceiveProps = (newprops) => {
@@ -79,7 +20,9 @@ class SidePanel extends React.Component {
     let locals = [];
     let remotes = [];
 
-    this.state.refsData.forEach( (ref, index) => {
+    this.props.refsData.forEach( (ref, index) => {
+
+      // console.log('ref:',ref);
 
       if(ref.type === 'LOCAL')
         locals.push(<ListItem key={index} primaryText={ref.name} />);
