@@ -9,15 +9,15 @@ import Git from 'nodegit';
 
 class gitFunctions {
 
-  static getCommits(repoPath,that) {
+  static getCommits(repoPath, sha, that) {
 
     let pathToRepo = require('path').resolve(repoPath);
     Git.Repository.open(pathToRepo)
     .then(function(repo) {
-      return repo.getMasterCommit();
+      return repo.getCommit(sha);
     })
-    .then(function( firstMasterCommit ) {
-      let history = firstMasterCommit.history( Git.Revwalk.SORT.Time);
+    .then(function( commit ) {
+      let history = commit.history( Git.Revwalk.SORT.Time);
       history.on("end", walk);
       history.start();
     })
@@ -202,11 +202,17 @@ class CommitTree extends React.Component {
   }
 
   componentDidMount = () => {
-    if(this.props.repo)
-    gitFunctions.getCommits(this.props.repo.path, this);
+    if(this.props.repo && this.props.branchRef.sha)
+    {
+      gitFunctions.getCommits(this.props.repo.path, this.props.branchRef.sha, this);
+    }
   }
 
   componentWillReceiveProps = (newprops) => {
+    if(newprops.repo && newprops.branchRef.sha)
+    {
+      gitFunctions.getCommits(newprops.repo.path, newprops.branchRef.sha, this);
+    }
   }
   render() {
 

@@ -13,7 +13,6 @@ class SidePanel extends React.Component {
   }
 
   listItemClick = (ref) => {
-    console.log(ref);
     this.props.setCurrentBranchCB(ref);
   }
 

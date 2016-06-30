@@ -74,7 +74,7 @@ class RepoOps extends React.Component {
 
   setCurrentBranchCB = (ref) => {
     this.setState({
-      currBranch: ref,
+      currBranchRef: ref,
     });
   }
 
@@ -87,10 +87,21 @@ class RepoOps extends React.Component {
   render = () => {
 
     let children = React.Children.map( this.props.children, child => {
+      if(child.type === CommitTree) {
+
+        return React.cloneElement(child, {
+          repo: this.props.repo,
+          branchRef: this.state.currBranchRef,
+        });
+
+      }
+      else {
 
         return React.cloneElement(child, {
           repo: this.props.repo,
         });
+
+      }
     });
 
     const styles = {
@@ -113,7 +124,7 @@ class RepoOps extends React.Component {
           refsData={this.state.refsData}
           setCurrentBranchCB={this.setCurrentBranchCB} />
         <div style={styles.tabs} >
-          {children || <CommitTree repo={this.props.repo} />}
+          {children || <CommitTree repo={this.props.repo} branchRef={this.state.currBranchRef} />}
         </div>
       </div>
     );
