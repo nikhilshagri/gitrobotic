@@ -182,7 +182,7 @@ class App extends React.Component {
 
   //for dev prurposes only
   componentDidMount = () => {
-    this.handleKeyPressChange('../git-gui');
+    this.handleKeyPressChange('../dummy-repo');
   }
 
   render() {
