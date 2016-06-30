@@ -1,6 +1,6 @@
 {
   "name": "gitrobotic",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -50,6 +50,7 @@
     "nodegit": "^0.13.0",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
+    "react-router": "^2.5.0",
     "react-tap-event-plugin": "^1.0.0",
     "source-map-support": "^0.4.0"
   }

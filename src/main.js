@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router, Route, Link, hashHistory } from 'react-router'
+
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -8,226 +10,232 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import keycode from 'keycode';
-import ActivityArea from './ActivityArea';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import Paper from 'material-ui/Paper';
+import Snackbar from 'material-ui/Snackbar';
+
+import Repo from './RepoPanel';
+import RepoOps from './RepoOps';
 import CommitTree from './CommitTreePanel';
 import StagingArea from './StagingAreaPanel';
-import {Tabs, Tab} from 'material-ui/Tabs';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-
 import Git from 'nodegit';
-
-// var pathToRepo = require('path').resolve('../js-reporters');
-
-
-const getCommitsFromRepo = function(repo) {
-
-  let pathToRepo = require('path').resolve(repo);
-  Git.Repository.open(pathToRepo)
-  .then(function(repo) {
-    return repo.getMasterCommit();
-  })
-  .then(function( firstMasterCommit ) {
-    let history = firstMasterCommit.history( Git.Revwalk.SORT.Time);
-    history.on("end", walk);
-    history.start();
-  })
-  .done();
-
-  //   function passed to history.on() listener to receive commits' info. 
-  //   calls the setCommitState of App class to set new state
-  const walk = (commitsArr) => {
-    let commits = [];
-      commitsArr.forEach( function(commit) {
-        commits.push({ 
-          sha: commit.sha(), 
-          author: commit.author().name(),
-          email: commit.author().email(),
-          date: commit.date().toString(),
-          message: commit.message()
-        });
-      });
-
-      const newRepo = {
-        repoName:repo.slice(3),
-        commits: commits
-      };
-
-      this.returnRepo(newRepo);
-  };
-
-}
 
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
 
-class SearchBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state={ value:props.pathToRepo };
-  }
+class gitFunctions {
+  static repoExists(path) {
+    const pathToRepo = require('path').resolve(path);
 
-  updateValue = (event) => {
-    this.setState({
-      value: event.target.value
-    });
-  }
-
-  sendQuery = (event) => {
-    if(!event.which || (event.which && event.which === 13) )
-      this.props.onKeyPress(this.state.value);
-  }
-
-  render() {
-    const style = {
-      margin:10
-    };
-
-    return (
-      <div style={style} >
-        <input type="text" placeholder="Enter Repo name here..." ref="textField" 
-        value={this.state.value} onChange={this.updateValue} onKeyDown={this.sendQuery} />
-        <RaisedButton label="Get Commits!"  onMouseDown={this.sendQuery} />
-      </div>
-    )
+    return Git.Repository.open(pathToRepo);
   }
 }
 
-class RepoTable extends React.Component {
-
+class MainToolbar extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  handleClick = (i) => {
-    this.props.selectRepo(i);
-  }
-
-  render() {
-    const style= {
-      margin: 5,
-      cursor: 'pointer'
+    this.state={
+      toggle: false
     };
-
-    let rows = [];
-    this.props.repos.forEach((function(repo, index) {
-        rows.push(
-          <Card style={style} key={index} onMouseDown={this.handleClick.bind(this, index)} >
-            <CardHeader title={repo.repoName} />
-          </Card>
-        );
-    }).bind(this));
-    return (
-      <div style={this.props.style} >{rows}</div>
-    )
   }
-}
+
+  changeToolbar = (label) => {
+    // console.log(label);
+    this.props.changeToolbar(label);
+  }
+
+  render = () => {
+    const styles = {
+      toolbar:{
+        backgroundColor: 'blue',
+        paddingLeft: '5%',
+        border: '1px solid black',
+        // boxShadow: '10px 10px 10px #888888',
+        zIndex: 100,
+      },
+      button: {
+        position: 'relative',
+        marginRight: 5,
+        marginLeft: 5,
+        backgroundColor: '#CACACA',
+      },
+    };
+    const repoButton = this.props.repoName?
+                        <FlatButton style={styles.button}
+                          label={this.props.repoName}
+                          containerElement={<Link to='/repoOps' />}
+                          linkButton={true} />
+                          :<div />;
+
+    return (
+        <Toolbar style={styles.toolbar} noGutter={false} >
+          <ToolbarGroup firstChild={true} >
+
+            <FlatButton style={styles.button}
+            containerElement={<Link to='/repo' />}
+            label='Repos'
+            linkButton={true} />
+
+            {repoButton}
+          </ToolbarGroup>
+        </Toolbar>
+    );
+  }
+} 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      pathToRepo:'' , 
-      currentRepo: '', 
-      currentRepoCommits: [],
+    this.state = {  
+      currRepoIndex: -1, 
       repos: [],
-      repoNames: [],
-      tabValue: 'CommitTree' 
+      openWrongDirSnackBar: false,
     };
   }
 
-  handleTabChange = (value) => {
-    this.setState({
-      tabValue: value
-    });
-  }
-
   handleKeyPressChange = (passedPath) => {
-    let repoName = passedPath.slice(3);
-    if(this.state.repoNames.indexOf(repoName) == -1) {
-      //call to global function
-      (getCommitsFromRepo.bind(this))(passedPath);
-    }
-    else {
+    //TODO: Check if passed path is valid or not
+    console.log(passedPath);
+    //extracts the name of the repo from the path name
+    const repoName = passedPath.slice(passedPath.lastIndexOf('/')+1);
+    let flag = false;
+    let pos;
 
-    }
-  }
+    this.state.repos.forEach( (repo, index) => {
 
-  setCurrentCommits = (repo) => {
-    this.setState({
-      currentRepo: repo.repoName,
-      currentRepoCommits: repo.commits
+      //if repo already exists in the state
+      if(repo.path === passedPath) {
+        pos = index;
+        flag = true;
+      }
     });
+
+    if( flag ) {
+      // console.log('true');
+      this.setState({
+        currRepoIndex: pos
+      });
+    }
+    else
+    {
+      // console.log('false');
+      //checks if the folder contains a git repo
+      let promise = gitFunctions.repoExists(passedPath);
+      promise.then( () => {
+        let repos = this.state.repos;
+        repos.push({
+          name: repoName,
+          path: passedPath
+        });
+        let repoIndex = repos.length - 1;
+        // console.log(repoIndex);
+
+        this.setState({
+          currRepoIndex: repoIndex,
+          repos: repos
+        });
+        this.changeToolbar(repoName);
+      })
+      .catch( (failure) => {
+        console.log('Could not find a git repository in the folder',
+          'Make sure you have selected the correct folder');
+        console.log('failure',failure);
+        this.setState({
+          openWrongDirSnackBar: true
+        });
+      });
+      // console.log(this.state);
+    }
   }
 
   handleRepoClick = (index) => {
-    this.setCurrentCommits(this.state.repos[index]);
+    window.setTimeout( () => {
+      this.setState({
+        currRepoIndex: index
+      });
+      this.changeToolbar(this.state.repos[index].name);
+    },0);
   }
 
-  returnRepo = (newRepo) =>
-  {
-    let repos = this.state.repos;
-    let repoNames = this.state.repoNames;
-    repos.push(newRepo);
-    repoNames.push(newRepo.repoName);
+  changeToolbar = (label) => {
+
+  }
+
+  handleRequestClose = () => {
     this.setState({
-      repos: repos,
-      repoNames: repoNames
+      openWrongDirSnackBar: false 
     });
-    this.setCurrentCommits(newRepo);
   }
 
   componentWillMount = () => {
     injectTapEventPlugin();
   }
 
+  componentWillReceiveProps = (newprops) => {
+    // console.log(newprops);
+  }
+
   //for dev prurposes only
   componentDidMount = () => {
-    this.handleKeyPressChange('../git-gui');
+    this.handleKeyPressChange('../dummy-repo');
   }
 
   render() {
 
     const styles = {
       mainPanel: {
-        display: 'flex',
-        border: '1px solid black',
-        width: '80%',
-        height:400
+        height:800
       },
       repos: {
-        flexShrink:3,
-        width: '100%'
       },
       tabs: {
-        border:'1px solid black', 
-        overflow: 'auto', 
-        width: '100%'
-      }
+        overflow: 'hidden', 
+        width: '50%',
+      },
+      font: {
+        fontFamily: '"Roboto", sans-serif',
+      },
     };
 
+    const wrongDirError = 'Could not find a git repository in the folder. Make sure you have selected the correct folder';
+
+    // console.log('name',this.state.repos[this.state.currRepoIndex].name);
+    let renderRepo = this.state.repos[this.state.currRepoIndex]?this.state.repos[this.state.currRepoIndex]:null;
+
+    let children = React.Children.map( this.props.children, child => {
+      if(child.type === Repo) {
+
+        return React.cloneElement(child, {
+          repos: this.state.repos,
+          pathToRepo: renderRepo? renderRepo.path: '',
+          selectRepo: this.handleRepoClick,
+          onKeyPress: this.handleKeyPressChange,
+        });
+
+      }
+      else if(child.type === RepoOps) {
+
+        return React.cloneElement(child, {
+          repo: renderRepo,
+        });
+
+      }
+    });
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <div>
-          <SearchBar pathToRepo={this.state.pathToRepo} onKeyPress={this.handleKeyPressChange} /> 
+        <div style={{width: '100%'}} >
+          <MainToolbar repoName={renderRepo? renderRepo.name: ''} />
           <div style={styles.mainPanel} >
-
-            <RepoTable style={styles.repos} repos={this.state.repos} selectRepo={this.handleRepoClick} />
-
-            <Tabs style={styles.tabs} value={this.state.tabValue}  onChange={this.handleTabChange} >
-
-              <Tab label="Commits" value="CommitTree" >
-                <CommitTree commits={this.state.currentRepoCommits}  />
-              </Tab>
-
-              <Tab label="Staging Area" value="StagingArea" >
-                <StagingArea repo={this.state.currentRepo} />
-              </Tab>
-
-            </Tabs>
+          <Snackbar open={this.state.openWrongDirSnackBar} message={wrongDirError} autoHideDuration={4000}
+          style={styles.font} onRequestClose={this.handleRequestClose}/>
+          {children || <Repo style={styles.repos} repos={this.state.repos} pathToRepo={renderRepo? renderRepo.path: ''}
+            selectRepo={this.handleRepoClick} onKeyPress={this.handleKeyPressChange}/>}
           </div>
         </div>
       </MuiThemeProvider>
@@ -237,6 +245,18 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <App  />,
+  <Router history={hashHistory}>
+
+    <Route path="/" component={App} >
+      <Route path='/repo' component={Repo} />
+
+      <Route path='/repoOps' component={RepoOps} >
+        <Route path='/repoOps/commitTree' component={CommitTree} />
+        <Route path='/repoOps/stagingArea' component={StagingArea} />
+      </Route>
+
+    </Route>
+
+  </Router>,
   document.getElementById('app')
 );
