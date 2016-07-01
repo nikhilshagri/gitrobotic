@@ -1,4 +1,6 @@
 import React from 'react';
+
+import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
@@ -7,7 +9,7 @@ import Git from 'nodegit';
 
 class gitFunctions {
 
-  static createCommit(repoPath, oid) {
+  static createCommit(repoPath, oid, commitMsg) {
     let index;
     let repo;
 
@@ -30,7 +32,7 @@ class gitFunctions {
         let committer = Git.Signature.create("Author name",
           "emailid@domain.com", currTimeInSecs , 0);
 
-        return repo.createCommit("HEAD", author, committer, "message", oid, [parent]);
+        return repo.createCommit("HEAD", author, committer, commitMsg, oid, [parent]);
       });
   }
 
@@ -260,7 +262,8 @@ class StagingArea extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      indexPaths: []
+      indexPaths: [],
+      commitMsg: '',
     };
   }
 
@@ -333,12 +336,22 @@ class StagingArea extends React.Component {
     //until here, all entries were added to the index and an index tree was written
     //from here, the new commit is generated using the index tree
     .then( () => {
-      let innerPromise = gitFunctions.createCommit(this.props.repo.path, oid);
+      let innerPromise = gitFunctions.createCommit(this.props.repo.path, oid, this.state.commitMsg);
       innerPromise.done(function(commitId) {
         console.log('Commit Hash:'+commitId);
       });
       
     });
+  }
+
+  updateValue = (event) => {
+    this.setState({
+      commitMsg: event.target.value
+    });
+  }
+
+  sendQuery = (event) => {
+    console.log(this.state.commitMsg);
   }
 
   componentWillReceiveProps = (newprops) => {
@@ -363,6 +376,15 @@ class StagingArea extends React.Component {
       <div style={styles.main} >
         <RaisedButton label='Create Commit!' onMouseDown={this.createCommit} />     
         <RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
+        <TextField
+          hintText="Enter commit message..."
+          multiLine={true}
+          rows={2}
+          rowsMax={2}
+          value={this.state.commitMsg}
+          onChange={this.updateValue}
+          onKeyDown={this.sendQuery()}
+        />
         <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
         <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
       </div>
