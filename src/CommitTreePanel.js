@@ -154,44 +154,12 @@ class CommitTree extends React.Component {
       selected_commit: commit,
     });
 
-    let diffArr = [];
-    let promise = gitFunctions.getCommitDiff(commit.sha, this.props.repo.path);
-    promise.done((diffList) => {
-      diffList.forEach((diff) => {
-        diff.patches().then((patches) => {
-          patches.forEach((patch) => {
-            // console.log(patch.lineStats());
-            patch.hunks().then((hunks) => {
-              hunks.forEach((hunk) => {
-                hunk.lines().then((lines) => {
-                  diffArr.push("diff", patch.oldFile().path(),
-                    patch.newFile().path());
-                    // console.log("diff", patch.oldFile().path(),
-                    //   patch.newFile().path());
-                  diffArr.push(hunk.header());
-                  // console.log(hunk.header());
-                  lines.forEach(function(line) {
-                    // console.log(String.fromCharCode(line.origin()));
-                    diffArr.push(String.fromCharCode(line.origin())+
-                      line.content());
-                    // console.log(String.fromCharCode(line.origin()) +
-                    // line.content());
-                  });
-                })
-                .done( () => {
-                  this.setState({
-                    diffs: diffArr,
-                    });
-                });
-              });
-            });
-          });
+    gitFunctions.getCommitDiff(commit.sha, this.props.repo.path)
+    .done((diffList) => {
+        this.setState({
+          diffs: diffList,
         });
-      });
-      // console.log(this);
-
     });
-
   }
 
   returnRepo = (commits) => {
