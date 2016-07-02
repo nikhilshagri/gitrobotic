@@ -350,9 +350,6 @@ class StagingArea extends React.Component {
     });
   }
 
-  sendQuery = (event) => {
-    console.log(this.state.commitMsg);
-  }
 
   componentWillReceiveProps = (newprops) => {
     // console.log(newprops);
@@ -383,7 +380,6 @@ class StagingArea extends React.Component {
           rowsMax={2}
           value={this.state.commitMsg}
           onChange={this.updateValue}
-          onKeyDown={this.sendQuery()}
         />
         <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
         <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
