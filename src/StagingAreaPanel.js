@@ -5,7 +5,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 
-import Git from 'nodegit';
+import DiffPanel from './utils/DiffPanel';
+
+import Git, { Diff } from 'nodegit';
 
 class gitFunctions {
 
@@ -56,6 +58,20 @@ class gitFunctions {
       return repo.refreshIndex();
     });
 
+  }
+
+  static getUnstagedChanges(repoPath) {
+
+    const pathToRepo = require('path').resolve(repoPath);
+
+    return Git.Repository.open(pathToRepo)
+    .then( (repo) => {
+      // console.log(repo);
+      return Diff.indexToWorkdir(repo, null, {
+      flags: Diff.OPTION.SHOW_UNTRACKED_CONTENT |
+             Diff.OPTION.RECURSE_UNTRACKED_DIRS
+      });
+    });
   }
 }
 
@@ -264,6 +280,7 @@ class StagingArea extends React.Component {
     this.state = {
       indexPaths: [],
       commitMsg: '',
+      diffs: [],
     };
   }
 
@@ -350,9 +367,80 @@ class StagingArea extends React.Component {
     });
   }
 
+  componentDidMount = () => {
+    let diffArr = [];
+    if(this.props.repo)
+      gitFunctions.getUnstagedChanges(this.props.repo.path)
+      .then( (diff) => {
+        diff.patches().then((patches) => {
+          patches.forEach((patch) => {
+            // console.log(patch.lineStats());
+            patch.hunks().then((hunks) => {
+              hunks.forEach((hunk) => {
+                hunk.lines().then((lines) => {
+                  diffArr.push("diff", patch.oldFile().path(),
+                    patch.newFile().path());
+                    // console.log("diff", patch.oldFile().path(),
+                    //   patch.newFile().path());
+                  diffArr.push(hunk.header());
+                  // console.log(hunk.header());
+                  lines.forEach(function(line) {
+                    // console.log(String.fromCharCode(line.origin()));
+                    diffArr.push(String.fromCharCode(line.origin())+
+                      line.content());
+                    // console.log(String.fromCharCode(line.origin()) +
+                    // line.content());
+                  });
+                })
+                .done( () => {
+                  // console.log(diffArr);
+                  this.setState({
+                    diffs: diffArr,
+                    });
+                });
+              });
+            });
+          });
+        });
+      });
+  }
 
   componentWillReceiveProps = (newprops) => {
-    // console.log(newprops);
+    let diffArr = [];
+    if(newprops.repo)
+      gitFunctions.getUnstagedChanges(newprops.repo.path)
+      .then( (diff) => {
+        diff.patches().then((patches) => {
+          patches.forEach((patch) => {
+            // console.log(patch.lineStats());
+            patch.hunks().then((hunks) => {
+              hunks.forEach((hunk) => {
+                hunk.lines().then((lines) => {
+                  diffArr.push("diff", patch.oldFile().path(),
+                    patch.newFile().path());
+                    // console.log("diff", patch.oldFile().path(),
+                    //   patch.newFile().path());
+                  diffArr.push(hunk.header());
+                  // console.log(hunk.header());
+                  lines.forEach(function(line) {
+                    // console.log(String.fromCharCode(line.origin()));
+                    diffArr.push(String.fromCharCode(line.origin())+
+                      line.content());
+                    // console.log(String.fromCharCode(line.origin()) +
+                    // line.content());
+                  });
+                })
+                .done( () => {
+                  // console.log(diffArr);
+                  this.setState({
+                    diffs: diffArr,
+                    });
+                });
+              });
+            });
+          });
+        });
+      });
   }
 
   render = () => {
@@ -383,6 +471,7 @@ class StagingArea extends React.Component {
         />
         <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
         <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
+        <DiffPanel diffs={this.state.diffs} />
       </div>
     )
   }
