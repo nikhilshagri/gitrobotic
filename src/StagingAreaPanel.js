@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 
-import DiffPanel from './utils/DiffPanel';
+import SelectiveDiffPanel from './SelectiveDiffPanel';
 
 import Git, { Diff } from 'nodegit';
 
@@ -401,7 +401,7 @@ class StagingArea extends React.Component {
         display: 'flex',
         flexDirection: 'column',
       },
-      diffPanel: {
+      selectiveDiffPanel: {
         width: '69%',
       }
     };
@@ -422,8 +422,8 @@ class StagingArea extends React.Component {
             <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
             <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
         </div>
-        <div style={styles.diffPanel} >
-          <DiffPanel diffs={this.state.diffs} />
+        <div style={styles.selectiveDiffPanel} >
+          <SelectiveDiffPanel diffs={this.state.diffs} />
         </div>
       </div>
     )
