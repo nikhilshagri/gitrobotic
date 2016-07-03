@@ -391,33 +391,40 @@ class StagingArea extends React.Component {
 
   render = () => {
     const styles = {
-      block: {
-        maxWidth: 250,
-      },
-      checkbox: {
-        marginBottom: 16,
-      },
       main: {
         height:350,
-        overflow: 'scroll',
-        // backgroundColor: 'black'
+        overflow: 'auto',
+        display: 'flex',
+      },
+      createCommit: {
+        width: '30%',
+        display: 'flex',
+        flexDirection: 'column',
+      },
+      diffPanel: {
+        width: '69%',
       }
     };
     return (
       <div style={styles.main} >
-        <RaisedButton label='Create Commit!' onMouseDown={this.createCommit} />     
-        <RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
-        <TextField
-          hintText="Enter commit message..."
-          multiLine={true}
-          rows={2}
-          rowsMax={2}
-          value={this.state.commitMsg}
-          onChange={this.updateValue}
-        />
-        <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
-        <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
-        <DiffPanel diffs={this.state.diffs} />
+        <div style={styles.createCommit} >
+          <div>
+            <RaisedButton label='Create Commit!' onMouseDown={this.createCommit} />
+            <RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
+          </div>
+          <TextField
+            hintText="Enter commit message..."
+            multiLine={true}
+            rows={2}
+            rowsMax={2}
+            value={this.state.commitMsg}
+            onChange={this.updateValue} />
+            <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
+            <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
+        </div>
+        <div style={styles.diffPanel} >
+          <DiffPanel diffs={this.state.diffs} />
+        </div>
       </div>
     )
   }
