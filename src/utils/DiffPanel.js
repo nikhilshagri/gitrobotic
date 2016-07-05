@@ -8,6 +8,7 @@ class DiffPanel extends React.Component {
     super(props);
     this.state = {
       diffTree: [],
+      diffSelect: [],
     };
   }
 
@@ -91,6 +92,28 @@ class DiffPanel extends React.Component {
                       };
                       return (<Diff diff={diffObj} key={index} />);
                     }),
+          diffSelect: formattedDiffs.map((diff, outerIndex) => {
+            return (
+              <div key={outerIndex} >
+                <div style={{height: 28}} />
+                <div style={{ border: '1px solid white',}} >
+                {diff.lines.map( (line, innerIndex) => {
+
+                  const styles = {
+                    checkbox: {
+                      height: 13,
+                      padding: 0,
+                      margin: 0,
+                      marginTop: 1,
+                      marginBottom: 1,
+                    }
+                  }
+                  return <input type='checkbox' style={styles.checkbox} key={innerIndex} />;
+                })}
+                </div>
+              </div>
+            );
+          }),
           });
       });
     }
