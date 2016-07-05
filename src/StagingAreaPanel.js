@@ -66,7 +66,6 @@ class gitFunctions {
 
     return Git.Repository.open(pathToRepo)
     .then( (repo) => {
-      // console.log(repo);
       return Diff.indexToWorkdir(repo, null, {
       flags: Diff.OPTION.SHOW_UNTRACKED_CONTENT |
              Diff.OPTION.RECURSE_UNTRACKED_DIRS
@@ -194,7 +193,6 @@ class StatusTable extends React.Component {
   }
 
   componentWillReceiveProps = (newprops) => {
-    // console.log('receive props',this.state.selectAll);
       this.getStatus(newprops.repo.path);
   }
 
@@ -302,14 +300,11 @@ class StagingArea extends React.Component {
         indexPaths.push(status);
     });
 
-    // console.log('index',indexPaths);
-
     window.setTimeout( () => {
 
       this.setState({
         indexPaths: indexPaths
       });
-      // console.log(this.state.indexPaths);
     }, 0);
   }
 
@@ -327,7 +322,6 @@ class StagingArea extends React.Component {
       return status.value;
     });
 
-    // console.log(filePaths);
 
     //takes in initial promise, uses it to chain a new promise to it, and returns the promise,
     //which is used in the next iteration
@@ -339,9 +333,6 @@ class StagingArea extends React.Component {
 
     promise.then(() => {
       return index.write();
-    })
-    .then(() => {
-      console.log(index.entries());
     })
     .then(() => {
       return index.writeTree();

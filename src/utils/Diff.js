@@ -29,7 +29,6 @@ class Diff extends React.Component {
         arr[1] = arr[1].slice(1);
         negArr = arr[0].split(',');
         posArr = arr[1].split(',');
-        // console.log(posArr, negArr);
       }
 
       if(line.trim() !== 'diff' && line.trim() !== this.props.diff.path) {

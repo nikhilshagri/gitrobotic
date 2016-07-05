@@ -55,7 +55,6 @@ class RepoOps extends React.Component {
             refsData.push(refObj);
 
           } else if (reference.isSymbolic()) {
-            // console.log("Reference symbtarget:", referenceName, reference.symbolicTarget());
           }
         }));
       });
@@ -63,12 +62,10 @@ class RepoOps extends React.Component {
       return Promise.all(promises);
     })
     .done(() => {
-      // console.log(currBranchRef);
       this.setState({
         refsData: refsData,
         currBranchRef: currBranchRef
       });
-      console.log('done');
     });
   }
 
@@ -79,7 +76,6 @@ class RepoOps extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log('mounting!');
     if(this.props.repo)
       this.getBranchRefs(this.props);
   }

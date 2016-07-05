@@ -104,7 +104,6 @@ class Repo extends React.Component {
   }
 
   fileChange = (event) => {
-    console.log('filechange!',event.target.files);
   }
 
   render = () => {

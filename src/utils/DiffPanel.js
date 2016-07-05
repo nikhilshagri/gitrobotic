@@ -12,7 +12,6 @@ class DiffPanel extends React.Component {
   }
 
   formatDiffs = (props) => {
-    // console.log(props);
 
     const LINESTATUS = {
       UNMODIFIED: 32,

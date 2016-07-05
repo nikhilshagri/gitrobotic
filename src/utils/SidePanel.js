@@ -26,8 +26,6 @@ class SidePanel extends React.Component {
 
     this.props.refsData.forEach( (ref, index) => {
 
-      // console.log('ref:',ref);
-
       const listItem = <ListItem key={index} primaryText={ref.name} onClick={() => this.listItemClick(ref)} />;
 
       if(ref.type === 'LOCAL')

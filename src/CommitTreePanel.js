@@ -44,19 +44,12 @@ class gitFunctions {
   }
 
   static getCommitDiff(sha, path) {
-    // console.log(sha);
-    // console.log(path);
+
     return Git.Repository.open(require('path').resolve(path))
     .then(function(repo) {
       return repo.getCommit(sha);
     })
     .then(function(commit) {
-      // console.log("commit " + commit.sha());
-      // console.log("Author:", commit.author().name() +
-      //   " <" + commit.author().email() + ">");
-      // console.log("Date:", commit.date());
-      // console.log("\n    " + commit.message());
-
       return commit.getDiff();
     });
   }
@@ -118,7 +111,6 @@ class CommitInfo extends React.Component {
       commit = this.props.commit;
     }
 
-    // console.log(commit);
     const styles= {
       font: {
         fontFamily: '"Roboto", sans-serif',
@@ -163,7 +155,6 @@ class CommitTree extends React.Component {
   }
 
   returnRepo = (commits) => {
-    // console.log('repo',repo);
     this.setState({
       commits : commits
     });

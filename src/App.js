@@ -44,7 +44,6 @@ class MainToolbar extends React.Component {
   }
 
   changeToolbar = (label) => {
-    // console.log(label);
     this.props.changeToolbar(label);
   }
 
@@ -99,7 +98,6 @@ class App extends React.Component {
 
   handleKeyPressChange = (passedPath) => {
     //TODO: Check if passed path is valid or not
-    console.log(passedPath);
     //extracts the name of the repo from the path name
     const repoName = passedPath.slice(passedPath.lastIndexOf('/')+1);
     let flag = false;
@@ -115,14 +113,12 @@ class App extends React.Component {
     });
 
     if( flag ) {
-      // console.log('true');
       this.setState({
         currRepoIndex: pos
       });
     }
     else
     {
-      // console.log('false');
       //checks if the folder contains a git repo
       let promise = gitFunctions.repoExists(passedPath);
       promise.then( () => {
@@ -132,7 +128,6 @@ class App extends React.Component {
           path: passedPath
         });
         let repoIndex = repos.length - 1;
-        // console.log(repoIndex);
 
         this.setState({
           currRepoIndex: repoIndex,
@@ -148,7 +143,6 @@ class App extends React.Component {
           openWrongDirSnackBar: true
         });
       });
-      // console.log(this.state);
     }
   }
 
@@ -176,7 +170,6 @@ class App extends React.Component {
   }
 
   componentWillReceiveProps = (newprops) => {
-    // console.log(newprops);
   }
 
   //for dev prurposes only
@@ -203,7 +196,6 @@ class App extends React.Component {
 
     const wrongDirError = 'Could not find a git repository in the folder. Make sure you have selected the correct folder';
 
-    // console.log('name',this.state.repos[this.state.currRepoIndex].name);
     let renderRepo = this.state.repos[this.state.currRepoIndex]?this.state.repos[this.state.currRepoIndex]:null;
 
     let children = React.Children.map( this.props.children, child => {
