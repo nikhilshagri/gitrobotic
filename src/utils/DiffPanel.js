@@ -70,9 +70,7 @@ class DiffPanel extends React.Component {
             .then( () => {
               let filePath = 'old:'+patch.oldFile().path()+' new:'+patch.newFile().path();
               formattedDiffs.push({
-                lines: diffLines.map( (lineObj, index) => {
-                  return lineObj.line;
-                }),
+                lines: diffLines,
                 path: filePath });
             }));
           });
@@ -84,7 +82,14 @@ class DiffPanel extends React.Component {
       .done( () => {
          this.setState({
           diffTree: formattedDiffs.map((diff, index) => {
-                      return (<Diff diff={diff} key={index} />);
+
+                      let diffObj = {
+                        lines:diff.lines.map( (lineObj) => {
+                          return lineObj.line;
+                        }),
+                        path: diff.path,
+                      };
+                      return (<Diff diff={diffObj} key={index} />);
                     }),
           });
       });
