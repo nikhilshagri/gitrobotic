@@ -181,7 +181,9 @@ class App extends React.Component {
 
     const styles = {
       mainPanel: {
-        height:800
+        height:500,
+        border: '1px solid blue',
+        overflow: 'hidden',
       },
       repos: {
       },
