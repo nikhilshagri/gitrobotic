@@ -1,46 +1,86 @@
 import React from 'react';
+
+import Promise from 'promise';
 import Diff from './Diff';
 
 class DiffPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formattedDiffs: [],
+      diffTree: [],
     };
   }
 
   formatDiffs = (props) => {
+    // console.log(props);
+
+    const LINESTATUS = {
+      UNMODIFIED: 32,
+      ADDED: 43,
+      DELETED: 45,
+    };
 
     if(props.diffs) {
+
       const diffs = props.diffs;
       let formattedDiffs = [];
+      let patches;
 
+      let promises1 = [];
       diffs.forEach( (diff, index) => {
-
-        diff.patches().then((patches) => {
-          patches.forEach((patch) => {
-            // console.log(patch.lineStats());
-            patch.hunks().then((hunks) => {
-              hunks.forEach((hunk) => {
-                hunk.lines().then((lines) => {
-                  formattedDiffs.push("diff", patch.oldFile().path(),
-                    patch.newFile().path());
-                  formattedDiffs.push(hunk.header());
-                  lines.forEach(function(line) {
-                    formattedDiffs.push(String.fromCharCode(line.origin())+
-                      line.content());
-                  });
-                })
-                .done( () => {
-                  // console.log(diffArr);
-                  this.setState({
-                    formattedDiffs: formattedDiffs,
-                    });
-                });
-              });
-            });
-          });
+          // push all promises to get the patches from every diff
+          promises1.push( diff.patches().then((retPatches) => {
+            patches = retPatches;
+          }) );
         });
+
+      // perform operation on those patches after you get them
+      return Promise.all(promises1)
+      .then( () => {
+        if(patches) {
+
+          let promises2 = [];
+          patches.forEach( (patch, index) => {
+
+            // this array stores all the lines and their corresponding headers
+            // belonging to a single diff
+            let diffLines = [];
+            // obtain promises for all the hunks belonging to a single
+            // patch. Each patch corresponds to a single file
+            promises2.push( patch.hunks().then( (hunks) => {
+
+              let promises3 = [];
+              hunks.forEach( (hunk) => {
+
+                // obtain promises for getting the lines from each hunk
+                promises3.push(
+                  hunk.lines().then( (lines) => {
+                  diffLines.push(hunk.header());
+                  lines.forEach( (line) => {
+                      diffLines.push(String.fromCharCode(line.origin())+line.content());
+                  });
+                }) );
+              });
+
+              //return promises for inserting the lines into diffLines
+              return Promise.all(promises3);
+            })
+            .then( () => {
+              let filePath = 'old:'+patch.oldFile().path()+' new:'+patch.newFile().path();
+              formattedDiffs.push({lines: diffLines, path: filePath });
+            }));
+          });
+
+          // return promises for inserting ALL the diffLines belonging to ALL the patches
+          return Promise.all(promises2);
+        }
+      })
+      .done( () => {
+         this.setState({
+          diffTree: formattedDiffs.map((diff, index) => {
+                      return (<Diff diff={diff} key={index} />);
+                    }),
+          });
       });
     }
   }
@@ -54,37 +94,6 @@ class DiffPanel extends React.Component {
   }
 
   render = () => {
-    // console.log('rendering now!');
-
-    let diffs = [];
-    //stores all the diffs in ONE file
-    let currDiff = [];
-    let currDiffFile = ''; 
-
-    //iterate through all lines while pushing all individual
-    //files' diffs into another array of diffs
-    this.state.formattedDiffs.forEach( (line, index, arr) => {
-
-      let filePath = arr[index + 1];
-      if(filePath)
-        filePath.trim();
-
-      if(line.trim() === 'diff' && filePath !== currDiffFile) {
-        diffs.push({lines: currDiff, path: currDiffFile});
-        currDiffFile = filePath;
-        currDiff = [];
-      }
-      else 
-        currDiff.push(line);
-
-    });
-    //pushing in the last file's diff as well
-    diffs.push({lines: currDiff, path: currDiffFile});
-    diffs.splice(0, 1);
-
-    let difftree = diffs.map((diff, index) => {
-      return (<Diff diff={diff} key={index} />);
-    });
 
     const styles = {
       main: {
@@ -93,7 +102,7 @@ class DiffPanel extends React.Component {
       },
     };
     return(
-      <div style={styles.main}>{difftree}</div>
+      <div style={styles.main}>{this.state.diffTree}</div>
     );
   }
 }
