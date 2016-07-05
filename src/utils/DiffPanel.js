@@ -54,9 +54,12 @@ class DiffPanel extends React.Component {
                 // obtain promises for getting the lines from each hunk
                 promises3.push(
                   hunk.lines().then( (lines) => {
-                  diffLines.push(hunk.header());
+                  diffLines.push({ line: hunk.header(), isLineHeader: true });
                   lines.forEach( (line) => {
-                      diffLines.push(String.fromCharCode(line.origin())+line.content());
+                      diffLines.push({
+                        line: String.fromCharCode(line.origin())+line.content(),
+                        isLineHeader: false
+                      });
                   });
                 }) );
               });
@@ -66,7 +69,11 @@ class DiffPanel extends React.Component {
             })
             .then( () => {
               let filePath = 'old:'+patch.oldFile().path()+' new:'+patch.newFile().path();
-              formattedDiffs.push({lines: diffLines, path: filePath });
+              formattedDiffs.push({
+                lines: diffLines.map( (lineObj, index) => {
+                  return lineObj.line;
+                }),
+                path: filePath });
             }));
           });
 
