@@ -8,6 +8,9 @@ class Diff extends React.Component {
 
   render = () => {
 
+    // TODO: Ensure that each file's diff hunks are in the correct
+    // order
+
     let diffLines = [];
     let posDiffs = [];
     let negDiffs = [];
