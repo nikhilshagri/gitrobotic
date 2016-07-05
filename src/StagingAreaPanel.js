@@ -383,7 +383,6 @@ class StagingArea extends React.Component {
   render = () => {
     const styles = {
       main: {
-        height:350,
         overflow: 'auto',
         display: 'flex',
       },
@@ -394,6 +393,8 @@ class StagingArea extends React.Component {
       },
       selectiveDiffPanel: {
         width: '69%',
+        height: 500,
+        overflow: 'auto',
       }
     };
     return (
