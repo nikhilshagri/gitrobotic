@@ -167,6 +167,7 @@ class App extends React.Component {
 
   componentWillMount = () => {
     injectTapEventPlugin();
+    this.handleKeyPressChange('../dummy-repo');
   }
 
   componentWillReceiveProps = (newprops) => {
@@ -174,7 +175,6 @@ class App extends React.Component {
 
   //for dev prurposes only
   componentDidMount = () => {
-    this.handleKeyPressChange('../dummy-repo');
   }
 
   render() {
