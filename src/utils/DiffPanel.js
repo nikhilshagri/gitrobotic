@@ -131,12 +131,21 @@ class DiffPanel extends React.Component {
 
     const styles = {
       main: {
+        display: 'flex',
+        width: '100%',
+      },
+      diffTree: {
         width: '100%',
         border: '1px solid black',
-      },
+      }
     };
     return(
-      <div style={styles.main}>{this.state.diffTree}</div>
+      <div style={styles.main}>
+        {this.props.showSelect?
+        <div>{this.state.diffSelect}</div>:
+        null}
+        <div>{this.state.diffTree}</div>
+      </div>
     );
   }
 }
