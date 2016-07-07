@@ -7,8 +7,7 @@ class DiffPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      diffTree: [],
-      diffSelect: [],
+      diffsArr: [],
     };
   }
 
@@ -23,7 +22,7 @@ class DiffPanel extends React.Component {
     if(props.diffs) {
 
       const diffs = props.diffs;
-      let formattedDiffs = [];
+      let diffsArr = [];
       let patches;
 
       let promises1 = [];
@@ -57,10 +56,10 @@ class DiffPanel extends React.Component {
                   hunk.lines().then( (lines) => {
                   diffLines.push({ line: hunk.header(), isLineHeader: true });
                   lines.forEach( (line) => {
-                      diffLines.push({
-                        line: String.fromCharCode(line.origin())+line.content(),
-                        isLineHeader: false
-                      });
+                    diffLines.push({
+                      line: line,
+                      isLineHeader: false
+                    });
                   });
                 }) );
               });
@@ -69,10 +68,13 @@ class DiffPanel extends React.Component {
               return Promise.all(promises3);
             })
             .then( () => {
-              let filePath = 'old:'+patch.oldFile().path()+' new:'+patch.newFile().path();
-              formattedDiffs.push({
+              diffsArr.push({
                 lines: diffLines,
-                path: filePath });
+                path: {
+                  old: patch.oldFile().path(),
+                  new: patch.newFile().path()
+                }
+              });
             }));
           });
 
@@ -81,40 +83,9 @@ class DiffPanel extends React.Component {
         }
       })
       .done( () => {
-         this.setState({
-          diffTree: formattedDiffs.map((diff, index) => {
-
-                      let diffObj = {
-                        lines:diff.lines.map( (lineObj) => {
-                          return lineObj.line;
-                        }),
-                        path: diff.path,
-                      };
-                      return (<Diff diff={diffObj} key={index} />);
-                    }),
-          diffSelect: formattedDiffs.map((diff, outerIndex) => {
-            return (
-              <div key={outerIndex} >
-                <div style={{height: 28}} />
-                <div style={{ border: '1px solid white',}} >
-                {diff.lines.map( (line, innerIndex) => {
-
-                  const styles = {
-                    checkbox: {
-                      height: 13,
-                      padding: 0,
-                      margin: 0,
-                      marginTop: 1,
-                      marginBottom: 1,
-                    }
-                  }
-                  return <input type='checkbox' style={styles.checkbox} key={innerIndex} />;
-                })}
-                </div>
-              </div>
-            );
-          }),
-          });
+        this.setState({
+          diffsArr: diffsArr
+        });
       });
     }
   }
@@ -129,6 +100,52 @@ class DiffPanel extends React.Component {
 
   render = () => {
 
+    let diffTree = [];
+    let diffSelect = [];
+
+    this.state.diffsArr.forEach((diff, index) => {
+
+      let formattedLines = diff.lines.map( (diffLine) => {
+
+        let line = diffLine.line;
+        if( !diffLine.isLineHeader )
+          return String.fromCharCode(line.origin())+line.content();
+        else
+          return line;
+      });
+
+      // sending each diff's content as an array to each 'Diff' component
+      let diffDisplay = {
+        lines:formattedLines,
+        path: 'old:'+diff.path.old+' new:'+diff.path.new,
+      };
+      diffTree.push(<Diff diff={diffDisplay} key={index} />);
+
+      // creating a column of checboxes to select individual lines/hunks
+      let outerIndex = index;
+      diffSelect.push(
+
+      <div key={outerIndex} >
+        <div style={{height: 28}} />
+        <div style={{ border: '1px solid white',}} >
+        {diff.lines.map( (line, innerIndex) => {
+
+          const styles = {
+            checkbox: {
+              height: 13,
+              padding: 0,
+              margin: 0,
+              marginTop: 1,
+              marginBottom: 1,
+            }
+          };
+          return <input type='checkbox' style={styles.checkbox} key={innerIndex} />;
+        })}
+        </div>
+      </div>
+      );
+    });
+
     const styles = {
       main: {
         display: 'flex',
@@ -142,9 +159,9 @@ class DiffPanel extends React.Component {
     return(
       <div style={styles.main}>
         {this.props.showSelect?
-        <div>{this.state.diffSelect}</div>:
+        <div>{diffSelect}</div>:
         null}
-        <div>{this.state.diffTree}</div>
+        <div>{diffTree}</div>
       </div>
     );
   }
