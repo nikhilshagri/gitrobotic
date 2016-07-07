@@ -21,12 +21,11 @@ class DiffPanel extends React.Component {
 
     if(props.diffs) {
 
-      const diffs = props.diffs;
       let diffsArr = [];
       let patches;
 
       let promises1 = [];
-      diffs.forEach( (diff, index) => {
+      props.diffs.forEach( (diff, index) => {
           // push all promises to get the patches from every diff
           promises1.push( diff.patches().then((retPatches) => {
             patches = retPatches;
@@ -41,9 +40,10 @@ class DiffPanel extends React.Component {
           let promises2 = [];
           patches.forEach( (patch, index) => {
 
-            // this array stores all the lines and their corresponding headers
-            // belonging to a single diff
-            let diffLines = [];
+            // this array stores the Git line objects, header and file path
+            // of a single diff
+            let diffs = [];
+
             // obtain promises for all the hunks belonging to a single
             // patch. Each patch corresponds to a single file
             promises2.push( patch.hunks().then( (hunks) => {
@@ -54,22 +54,24 @@ class DiffPanel extends React.Component {
                 // obtain promises for getting the lines from each hunk
                 promises3.push(
                   hunk.lines().then( (lines) => {
-                  diffLines.push({ line: hunk.header(), isLineHeader: true });
-                  lines.forEach( (line) => {
-                    diffLines.push({
-                      line: line,
-                      isLineHeader: false
+
+                    // this makes it easier to stage hunks
+                    diffs.push({
+                      header: hunk.header(),
+                      lines: lines,
+                      path: patch.oldFile().path()
                     });
-                  });
-                }) );
+                  }) );
               });
 
-              //return promises for inserting the lines into diffLines
+              // return promises for inserting the lines into diffLines
               return Promise.all(promises3);
             })
             .then( () => {
               diffsArr.push({
-                lines: diffLines,
+                diffs: diffs,
+                // diff already contains a path, but we need the old path as well as
+                // the new one
                 path: {
                   old: patch.oldFile().path(),
                   new: patch.newFile().path()
@@ -83,6 +85,21 @@ class DiffPanel extends React.Component {
         }
       })
       .done( () => {
+
+        /***
+         * diffsArr: Array of diffFiles
+         * diffFile: All the hunks from one single file
+         *  |
+         *  |-diffs: Array of diffs of ONE file
+         *  |  diff: data of ONE hunk
+         *  |   |
+         *  |   |- header: string of header
+         *  |   |- lines: array of Git line objects
+         *  |   |- path: path of hunk
+         *  |
+         *  |-path: contains path of new and old file
+         ***/
+
         this.setState({
           diffsArr: diffsArr
         });
@@ -103,32 +120,36 @@ class DiffPanel extends React.Component {
     let diffTree = [];
     let diffSelect = [];
 
-    this.state.diffsArr.forEach((diff, index) => {
+    this.state.diffsArr.forEach((diffFile, fileIndex) => {
+      let { diffs, path } = diffFile;
 
-      let formattedLines = diff.lines.map( (diffLine) => {
+      let formattedLines = [];
+      diffs.forEach( (diff, diffIndex) => {
+        let { header, lines, path } = diff;
 
-        let line = diffLine.line;
-        if( !diffLine.isLineHeader )
-          return String.fromCharCode(line.origin())+line.content();
-        else
-          return line;
+        formattedLines.push(header);
+        lines.forEach( (line) => {
+            formattedLines.push(String.fromCharCode(line.origin())+line.content());
+        });
       });
 
-      // sending each diff's content as an array to each 'Diff' component
+      // collecting all the header and lines of the hunks in a single file
+      // and putting them in a diffDisplay object
       let diffDisplay = {
         lines:formattedLines,
-        path: 'old:'+diff.path.old+' new:'+diff.path.new,
+        path: 'old:'+path.old+' new:'+path.new,
       };
-      diffTree.push(<Diff diff={diffDisplay} key={index} />);
+      diffTree.push(<Diff diff={diffDisplay} key={fileIndex} />);
+
 
       // creating a column of checboxes to select individual lines/hunks
-      let outerIndex = index;
       diffSelect.push(
 
-      <div key={outerIndex} >
+      // each div contains all the checkboxes of a single file
+      <div key={fileIndex} >
         <div style={{height: 28}} />
         <div style={{ border: '1px solid white',}} >
-        {diff.lines.map( (line, innerIndex) => {
+        {formattedLines.map( (line, lineIndex) => {
 
           const styles = {
             checkbox: {
@@ -139,11 +160,12 @@ class DiffPanel extends React.Component {
               marginBottom: 1,
             }
           };
-          return <input type='checkbox' style={styles.checkbox} key={innerIndex} />;
+          return <input type='checkbox' style={styles.checkbox} key={lineIndex} />;
         })}
         </div>
       </div>
       );
+
     });
 
     const styles = {
