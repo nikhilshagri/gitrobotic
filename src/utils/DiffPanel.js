@@ -107,6 +107,14 @@ class DiffPanel extends React.Component {
     }
   }
 
+  checkboxCB = (data, path) => {
+    if(Array.isArray(data))
+      console.log(data.map((line) => {return line.content();}));
+    else
+      console.log(data.content());
+    console.log(path, event);
+  }
+
   componentDidMount = () => {
     this.formatDiffs(this.props);
   }
@@ -124,6 +132,7 @@ class DiffPanel extends React.Component {
       let { diffs, path } = diffFile;
 
       let formattedLines = [];
+
       diffs.forEach( (diff, diffIndex) => {
         let { header, lines, path } = diff;
 
@@ -141,7 +150,6 @@ class DiffPanel extends React.Component {
       };
       diffTree.push(<Diff diff={diffDisplay} key={fileIndex} />);
 
-
       // creating a column of checboxes to select individual lines/hunks
       diffSelect.push(
 
@@ -149,8 +157,12 @@ class DiffPanel extends React.Component {
       <div key={fileIndex} >
         <div style={{height: 28}} />
         <div style={{ border: '1px solid white',}} >
-        {formattedLines.map( (line, lineIndex) => {
+        {diffs.map( (diff, diffIndex) => {
+          let { header, lines, path } = diff;
 
+          let callbackFn = (data, path) => {
+            this.checkboxCB(data, path);
+          }
           const styles = {
             checkbox: {
               height: 13,
@@ -160,7 +172,21 @@ class DiffPanel extends React.Component {
               marginBottom: 1,
             }
           };
-          return <input type='checkbox' style={styles.checkbox} key={lineIndex} />;
+          // the header calls the callback with an array containing all the difflines
+          // and the line calls the callback with its corresponding diffline
+          return (
+            <div key={diffIndex} >
+
+            <input type='checkbox' style={styles.checkbox}
+            onChange={() => {callbackFn(lines, path)}} />
+              {lines.map( (line, lineIndex) => {
+                return <input type='checkbox' style={styles.checkbox}
+                key={lineIndex} onChange={(event) => {console.log(event.target); callbackFn(line, path, event);}} />;
+              })}
+
+            </div>
+          );
+
         })}
         </div>
       </div>
