@@ -8,6 +8,7 @@ class DiffPanel extends React.Component {
     super(props);
     this.state = {
       diffsArr: [],
+      checked: [],
     };
   }
 
@@ -22,6 +23,7 @@ class DiffPanel extends React.Component {
     if(props.diffs) {
 
       let diffsArr = [];
+      let checked = [];
       let patches;
 
       let promises1 = [];
@@ -38,18 +40,19 @@ class DiffPanel extends React.Component {
         if(patches) {
 
           let promises2 = [];
-          patches.forEach( (patch, index) => {
+          patches.forEach( (patch, fileIndex) => {
 
             // this array stores the Git line objects, header and file path
             // of a single diff
             let diffs = [];
+            let checklets = [];
 
             // obtain promises for all the hunks belonging to a single
             // patch. Each patch corresponds to a single file
             promises2.push( patch.hunks().then( (hunks) => {
 
               let promises3 = [];
-              hunks.forEach( (hunk) => {
+              hunks.forEach( (hunk, hunkIndex) => {
 
                 // obtain promises for getting the lines from each hunk
                 promises3.push(
@@ -61,6 +64,8 @@ class DiffPanel extends React.Component {
                       lines: lines,
                       path: patch.oldFile().path()
                     });
+
+                    checklets.push(lines.map((line) => {return false;}));
                   }) );
               });
 
@@ -68,6 +73,7 @@ class DiffPanel extends React.Component {
               return Promise.all(promises3);
             })
             .then( () => {
+              checked.push(checklets);
               diffsArr.push({
                 diffs: diffs,
                 // diff already contains a path, but we need the old path as well as
@@ -101,18 +107,32 @@ class DiffPanel extends React.Component {
          ***/
 
         this.setState({
-          diffsArr: diffsArr
+          diffsArr: diffsArr,
+          checked: checked
         });
       });
     }
   }
 
-  checkboxCB = (data, path) => {
-    if(Array.isArray(data))
-      console.log(data.map((line) => {return line.content();}));
-    else
-      console.log(data.content());
-    console.log(path, event);
+  callbackLine = (isChecked, fileIndex, diffIndex, lineIndex) => {
+    this.setState((prevState) => {
+      prevState.checked[fileIndex][diffIndex][lineIndex] = isChecked;
+      return {
+        checked: prevState.checked
+      };
+    })
+  }
+
+  callbackHunk = (isChecked, fileIndex, diffIndex) => {
+    this.setState( (prevState) => {
+      let checked = prevState.checked;
+      checked[fileIndex][diffIndex].forEach( (line, lineIndex) => {
+        checked[fileIndex][diffIndex][lineIndex] = isChecked;
+      });
+      return {
+        checked: checked
+      };
+    })
   }
 
   componentDidMount = () => {
@@ -160,9 +180,6 @@ class DiffPanel extends React.Component {
         {diffs.map( (diff, diffIndex) => {
           let { header, lines, path } = diff;
 
-          let callbackFn = (data, path) => {
-            this.checkboxCB(data, path);
-          }
           const styles = {
             checkbox: {
               height: 13,
@@ -178,11 +195,13 @@ class DiffPanel extends React.Component {
             <div key={diffIndex} >
 
             <input type='checkbox' style={styles.checkbox}
-            onChange={() => {callbackFn(lines, path)}} />
-              {lines.map( (line, lineIndex) => {
-                return <input type='checkbox' style={styles.checkbox}
-                key={lineIndex} onChange={(event) => {console.log(event.target); callbackFn(line, path, event);}} />;
-              })}
+            onChange={(e) => {this.callbackHunk(e.target.checked,fileIndex, diffIndex);}} />
+            {lines.map( (line, lineIndex) => {
+              return <input type='checkbox' style={styles.checkbox}
+              key={lineIndex}
+              checked={this.state.checked[fileIndex][diffIndex][lineIndex]}
+              onChange={(e) => {this.callbackLine(e.target.checked, fileIndex, diffIndex, lineIndex);}} />;
+            })}
 
             </div>
           );
