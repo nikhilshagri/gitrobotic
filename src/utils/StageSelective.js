@@ -1,5 +1,7 @@
 import React from 'react';
 
+import DiffPanel from './DiffPanel';
+
 class StageSelective extends React.Component {
   constructor(props) {
     super(props);
@@ -7,7 +9,10 @@ class StageSelective extends React.Component {
 
   render = () => {
     return (
-      <div>testDiv</div>
+      <div>
+        testDiv
+        <DiffPanel {...this.props} showSelect={true} />
+      </div>
     );
   }
 }
