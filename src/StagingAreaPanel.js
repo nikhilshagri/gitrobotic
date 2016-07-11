@@ -402,7 +402,7 @@ class StagingArea extends React.Component {
             <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
         </div>
         <div style={styles.selectiveDiffPanel} >
-          <StageSelective diffs={this.state.diffs} />
+          <StageSelective diffs={this.state.diffs} repo={this.props.repo} />
         </div>
       </div>
     )

@@ -3,6 +3,18 @@ import React from 'react';
 import DiffPanel from './DiffPanel';
 import CommitMessage from './CommitMessage';
 
+import Promise from 'promise';
+import Git from 'nodegit';
+
+const gitFunctions = {
+
+  getRepo: (path) => {
+    const pathToRepo = require('path').resolve(path);
+
+    return Git.Repository.open(pathToRepo);
+  }
+};
+
 class StageSelective extends React.Component {
   constructor(props) {
     super(props);
@@ -11,9 +23,30 @@ class StageSelective extends React.Component {
     }
   }
 
-  createCommit = (commitMsg) => {
-    console.log(commitMsg);
-    console.log(this.diffPanel);
+  createCommit = (filesArr) => {
+
+    if(filesArr.length === 0) {
+      console.log('Please stage lines which are modified');
+      return;
+    }
+
+    // console.log(filesArr);
+
+    let repo;
+    gitFunctions.getRepo(this.props.repo.path)
+    .then( (repo) => {
+      repo = repo;
+      const isStaged = false;
+
+      let promises = [];
+      filesArr.forEach( (file, index) => {
+        console.log(file.path, file.lines);
+        promises.push(repo.stageLines(file.path,file.lines,isStaged));
+      });
+      return Promise.all(promises);
+    });
+  }
+
   collectCheckedLines = (commitMsg) => {
 
     const LINESTATUS = {
