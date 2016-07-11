@@ -58,6 +58,10 @@ class DiffPanel extends React.Component {
                 promises3.push(
                   hunk.lines().then( (lines) => {
 
+                    // we don't want the last line if there was no newline in the org file
+                    if(lines[lines.length - 1].content().match(/\ No newline at end of file/))
+                      lines.pop();
+
                     // this makes it easier to stage hunks
                     diffs.push({
                       header: hunk.header(),
