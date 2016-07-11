@@ -6,6 +6,7 @@ import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 
 import StageSelective from './utils/StageSelective';
+import CommitMessage from './utils/CommitMessage';
 
 import Git, { Diff } from 'nodegit';
 
@@ -277,7 +278,6 @@ class StagingArea extends React.Component {
     super(props);
     this.state = {
       indexPaths: [],
-      commitMsg: '',
       diffs: [],
     };
   }
@@ -308,7 +308,7 @@ class StagingArea extends React.Component {
     }, 0);
   }
 
-  createCommit = () => {
+  createCommit = (commitMsg) => {
 
     let index;
     let oid;
@@ -344,17 +344,11 @@ class StagingArea extends React.Component {
     //until here, all entries were added to the index and an index tree was written
     //from here, the new commit is generated using the index tree
     .then( () => {
-      let innerPromise = gitFunctions.createCommit(this.props.repo.path, oid, this.state.commitMsg);
+      let innerPromise = gitFunctions.createCommit(this.props.repo.path, oid, commitMsg);
       innerPromise.done(function(commitId) {
         console.log('Commit Hash:'+commitId);
       });
       
-    });
-  }
-
-  updateValue = (event) => {
-    this.setState({
-      commitMsg: event.target.value
     });
   }
 
@@ -401,16 +395,9 @@ class StagingArea extends React.Component {
       <div style={styles.main} >
         <div style={styles.createCommit} >
           <div>
-            <RaisedButton label='Create Commit!' onMouseDown={this.createCommit} />
             <RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
+            <CommitMessage buttonMsg='Create Commit!' commitCB={this.createCommit} />
           </div>
-          <TextField
-            hintText="Enter commit message..."
-            multiLine={true}
-            rows={2}
-            rowsMax={2}
-            value={this.state.commitMsg}
-            onChange={this.updateValue} />
             <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
             <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
         </div>
