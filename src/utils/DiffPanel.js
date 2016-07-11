@@ -14,12 +14,6 @@ class DiffPanel extends React.Component {
 
   formatDiffs = (props) => {
 
-    const LINESTATUS = {
-      UNMODIFIED: 32,
-      ADDED: 43,
-      DELETED: 45,
-    };
-
     if(props.diffs) {
 
       let diffsArr = [];
