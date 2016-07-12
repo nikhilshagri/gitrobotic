@@ -3,6 +3,9 @@ import React from 'react';
 import Promise from 'promise';
 import Diff from './Diff';
 
+// IMP TODO FIX: Selective staging is only available for files with modified status
+// Modify state so that it is only possible to select lines from modified lines
+
 class DiffPanel extends React.Component {
   constructor(props) {
     super(props);

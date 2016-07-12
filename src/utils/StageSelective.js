@@ -44,6 +44,14 @@ class StageSelective extends React.Component {
         promises.push(repo.stageLines(file.path,file.lines,isStaged));
       });
       return Promise.all(promises);
+    })
+    .catch( (err) => {
+      console.log('err:',err);
+    })
+    .then( (num) => {
+      console.log(num);
+      console.log('done!');
+      return repo.refreshIndex();
     });
   }
 
