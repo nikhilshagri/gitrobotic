@@ -71,29 +71,68 @@ class Commit extends React.Component {
   render() {
     const styles={
       span: {
-        fontWeight: 900,
+        fontWeight: 500,
       },
       commitDiv: {
+        display: 'flex',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         fontFamily: '"Roboto", sans-serif',
-        padding: 10,
-        margin: 9,
-        boxShadow: '2px 2px 2px #888888',
+        padding: 1,
+        margin: 1,
+        backgroundColor: '#f1efef',
+        borderBottom: '2px inset #d8d8d8',
       },
       circleIcon: {
-        width: 13,
-        height: 13,
+        minWidth: 13,
+        maxWidth: 13,
+        minHeight: 13,
+        maxHeight: 13,
+      },
+      message: {
+        fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        padding: 2,
+        margin: 4,
+        fontSize: 15,
+      },
+      sha: {
+        fontSize: 12,
+        fontFamily: 'monospace',
+      },
+      sideBar: {
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+      },
+      line: {
+        position: 'absolute',
+        left: '42%',
+        width: 2,
+        height: 80,
+        backgroundColor: '#a9a7a7',
       }
     };
     const commit = this.props.commit;
 
     return (
       <div style={styles.commitDiv} onClick={() => { this.handleOnClick(commit) }} >
-        <CircleIcon style={styles.circleIcon} color='red'/>
-        <span style={styles.span} >{'   '+commit.author}</span>:
-        {commit.message}
+        <div style={styles.sideBar}>
+          <div style={styles.line} />
+          <CircleIcon style={styles.circleIcon} color='#c1c1c1'/>
+        </div>
+        <div style={styles.message} >
+          <p style={{margin: 4}}>{commit.author}</p>
+          <span style={styles.sha}>{commit.sha.slice(0, 8)+'  '}</span>
+          <span style={styles.span}>{commit.message}</span>
+        </div>
       </div>
     )
   }
