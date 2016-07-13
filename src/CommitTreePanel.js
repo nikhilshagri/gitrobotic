@@ -6,6 +6,8 @@ import DiffPanel from './utils/DiffPanel';
 
 import Git from 'nodegit';
 
+var url = require("file!./static/branchIcon.svg");
+
 
 class gitFunctions {
 
