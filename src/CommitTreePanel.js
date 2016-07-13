@@ -136,7 +136,7 @@ class Commit extends React.Component {
         </div>
         <div style={styles.message} >
           <p style={{margin: 4}}>{commit.author}</p>
-          <span style={styles.sha}>{commit.sha.slice(0, 8)+'  '}</span>
+          {commit.sha?<span style={styles.sha}>{commit.sha.slice(0, 8)+'  '}</span>:null}
           <span style={styles.span}>{commit.message}</span>
         </div>
       </div>
@@ -157,18 +157,43 @@ class CommitInfo extends React.Component {
     }
 
     const styles= {
-      font: {
+      main: {
         backgroundColor: constStyles.bgColor,
         fontFamily: constStyles.fontFamily,
         fontSize: 15,
+        border: '2px solid #d8d8d8',
+        letterSpacing: -1,
       },
+      margin: {
+        margin: 10,
+      },
+      author: {
+        margin: 7,
+        fontSize: 32,
+        fontWeight: 700,
+        color: '#474747',
+      },
+      message: {
+        color: '#656565',
+        fontSize: 20,
+      },
+      dateSha: {
+        color: '#656565',
+        fontSize: 15,
+      }
     };
     return (
-      <div style={{border: '1px solid black' }} >
-        <p style={styles.font} ><b>{commit.author}</b></p>
-        <p style={styles.font} >{commit.sha}</p>
-        <p style={styles.font} >{commit.message}</p>
-        <p style={styles.font} >{commit.date}</p>
+      <div style={styles.main} >
+        <div style={styles.margin} >
+          <p style={styles.author} >{commit.author}</p>
+          <p style={styles.message} >{commit.message}</p>
+          <p style={styles.dateSha}>
+            {commit.sha?
+              <span style={{fontFamily: 'monospace', fontWeight: 700}} >{commit.sha.slice(0, 8)}</span>
+              :null}
+            <span >{' '+commit.date}</span>
+          </p>
+        </div>
       </div>
     );
   }
@@ -259,7 +284,9 @@ class CommitTree extends React.Component {
         </div>
         <div style={{width: '65%', height: 500, overflow: 'auto'}}>
           <CommitInfo commit={this.state.selected_commit} />
-          <DiffPanel diffs={this.state.diffs} />
+          <div style={{overflow: 'scroll', border: '2px solid #d8d8d8',}}>
+            <DiffPanel diffs={this.state.diffs} />
+          </div>
         </div>
       </div>
     )
