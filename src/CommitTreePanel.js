@@ -218,21 +218,27 @@ class CommitTree extends React.Component {
 
     const styles={
       commits: {
-        border:'1px solid black',
-        overflow: 'scroll',
-        width: '35%',
+        border: '2px solid #d8d8d8',
+        borderRadius: '0px 0px 4px 4px',
+        overflow: 'auto',
         height: 350,
       },
-      commitLine: {
-        backgroundColor: 'red',
-        position: 'absolute',
-        width: 3,
-        height: '100%',
-        top: '6%',
-        left: '1.7%',
+      branchName: {
+        display: 'flex',
+        fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+        fontWeight: 500,
+        fontSize: 20,
+        backgroundColor: '#f1efef',
+        border: '2px solid #d8d8d8',
+        borderBottom: 0,
+        margin: 0,
+        padding: 20,
       },
     };
-
 
     let rows=[];
     this.state.commits.forEach((commit, index) => {
@@ -240,9 +246,15 @@ class CommitTree extends React.Component {
     });
     return (
       <div style={{display: 'flex'}} >
-        <div style={styles.commits}>
-          {/*<div><div style={styles.commitLine} /></div>*/}
-          { rows }
+        <div style={{width: '35%'}}>
+          <div style={styles.branchName}>
+            <img style={{width: 15, height: 24}} src={url}></img>
+            <div style={{width: 10}} />
+            <div style={{height: 24, color: '#6a6a6a'}}>{' '+this.props.branchRef.name}</div>
+          </div>
+          <div style={styles.commits}>
+            { rows }
+          </div>
         </div>
         <div style={{width: '65%', height: 500, overflow: 'auto'}}>
           <CommitInfo commit={this.state.selected_commit} />
