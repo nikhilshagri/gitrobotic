@@ -8,6 +8,14 @@ import Git from 'nodegit';
 
 var url = require("file!./static/branchIcon.svg");
 
+const constStyles = {
+  fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+  bgColor: '#f1efef',
+};
 
 class gitFunctions {
 
@@ -83,7 +91,7 @@ class Commit extends React.Component {
         fontFamily: '"Roboto", sans-serif',
         padding: 1,
         margin: 1,
-        backgroundColor: '#f1efef',
+        backgroundColor: constStyles.bgColor,
         borderBottom: '2px inset #d8d8d8',
       },
       circleIcon: {
@@ -93,11 +101,7 @@ class Commit extends React.Component {
         maxHeight: 13,
       },
       message: {
-        fontFamily: `apple-system,
-          BlinkMacSystemFont,"Segoe UI",
-          Roboto,Helvetica,Arial,sans-serif,
-          "Apple Color Emoji","Segoe UI Emoji",
-          "Segoe UI Symbol"`,
+        fontFamily: constStyles.fontFamily,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
@@ -154,7 +158,8 @@ class CommitInfo extends React.Component {
 
     const styles= {
       font: {
-        fontFamily: '"Roboto", sans-serif',
+        backgroundColor: constStyles.bgColor,
+        fontFamily: constStyles.fontFamily,
         fontSize: 15,
       },
     };
@@ -225,14 +230,10 @@ class CommitTree extends React.Component {
       },
       branchName: {
         display: 'flex',
-        fontFamily: `apple-system,
-          BlinkMacSystemFont,"Segoe UI",
-          Roboto,Helvetica,Arial,sans-serif,
-          "Apple Color Emoji","Segoe UI Emoji",
-          "Segoe UI Symbol"`,
+        fontFamily: constStyles.fontFamily,
         fontWeight: 500,
         fontSize: 20,
-        backgroundColor: '#f1efef',
+        backgroundColor: constStyles.bgColor,
         border: '2px solid #d8d8d8',
         borderBottom: 0,
         margin: 0,
