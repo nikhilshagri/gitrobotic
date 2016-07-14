@@ -201,13 +201,37 @@ class CommitInfo extends React.Component {
   }
 }
 
+class EmptyCommitInfo extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render = () => {
+
+    const styles={
+      main:{
+        width: '65%',
+        border: '2px solid'+ constStyles.darkRed,
+        color: constStyles.darkRed,
+        fontFamily: constStyles.fontFamily,
+        fontSize: 50,
+        fontWeight: 800,
+        letterSpacing: -2,
+      }
+    }
+    return (
+      <div style={styles.main} >Select a commit!</div>
+    );
+  }
+}
+
 class CommitTree extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       commits: [],
       diffs: [],
-      selected_commit: '',
+      selected_commit: null,
     };
     this.getCommitDiff = this.getCommitDiff.bind(this);
   }
@@ -243,6 +267,9 @@ class CommitTree extends React.Component {
   componentWillReceiveProps = (newprops) => {
     if(newprops.repo && newprops.branchRef.sha)
     {
+      this.setState({
+        selected_commit: null
+      });
       gitFunctions.getCommits(newprops.repo.path, newprops.branchRef.sha, this);
     }
   }
@@ -285,12 +312,14 @@ class CommitTree extends React.Component {
             { rows }
           </div>
         </div>
-        <div style={{width: '65%', height: 500, overflow: 'auto'}}>
-          <CommitInfo commit={this.state.selected_commit} />
-          <div style={{overflow: 'scroll', border: '2px solid'+constStyles.darkRed}}>
-            <DiffPanel diffs={this.state.diffs} />
-          </div>
-        </div>
+        {this.state.selected_commit?
+          <div style={{width: '65%', height: 500, overflow: 'auto'}}>
+            <CommitInfo commit={this.state.selected_commit} />
+            <div style={{overflow: 'scroll', border: '2px solid'+constStyles.darkRed}}>
+              <DiffPanel diffs={this.state.diffs} />
+            </div>
+          </div>:
+          <EmptyCommitInfo />}
       </div>
     )
   }
