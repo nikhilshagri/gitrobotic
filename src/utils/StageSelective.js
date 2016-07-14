@@ -40,7 +40,6 @@ class StageSelective extends React.Component {
 
       let promises = [];
       filesArr.forEach( (file, index) => {
-        console.log(file.path, file.lines);
         promises.push(repo.stageLines(file.path,file.lines,isStaged));
       });
       return Promise.all(promises);
@@ -49,7 +48,6 @@ class StageSelective extends React.Component {
       console.log('err:',err);
     })
     .then( (num) => {
-      console.log(num);
       console.log('done!');
       return repo.refreshIndex();
     });
@@ -79,8 +77,9 @@ class StageSelective extends React.Component {
         });
       });
 
-      if(linesArr.length !== 0)
+      if(linesArr.length !== 0) {
         filesArr.push({lines: linesArr, path: diffFile.path.old});
+      }
     });
 
     this.createCommit(filesArr);

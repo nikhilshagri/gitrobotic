@@ -3,9 +3,6 @@ import React from 'react';
 import Promise from 'promise';
 import Diff from './Diff';
 
-// IMP TODO FIX: Selective staging is only available for files with modified status
-// Modify state so that it is only possible to select lines from modified lines
-
 class DiffPanel extends React.Component {
   constructor(props) {
     super(props);
@@ -82,7 +79,8 @@ class DiffPanel extends React.Component {
                 path: {
                   old: patch.oldFile().path(),
                   new: patch.newFile().path()
-                }
+                },
+                isModified: patch.isModified(),
               });
             }));
           });
@@ -150,7 +148,7 @@ class DiffPanel extends React.Component {
     let diffSelect = [];
 
     this.state.diffsArr.forEach((diffFile, fileIndex) => {
-      let { diffs, path } = diffFile;
+      let { diffs, path , isModified} = diffFile;
 
       let formattedLines = [];
 
@@ -169,48 +167,53 @@ class DiffPanel extends React.Component {
         lines:formattedLines,
         path: 'old:'+path.old+' new:'+path.new,
       };
-      diffTree.push(<Diff diff={diffDisplay} key={fileIndex} />);
+      if(isModified) {
+        diffTree.unshift(<Diff diff={diffDisplay} key={fileIndex} />);
 
-      // creating a column of checboxes to select individual lines/hunks
-      diffSelect.push(
+        // creating a column of checboxes to select individual lines/hunks
+        diffSelect.unshift(
 
-      // each div contains all the checkboxes of a single file
-      <div key={fileIndex} >
-        <div style={{height: 28}} />
-        <div style={{ border: '1px solid white',}} >
-        {diffs.map( (diff, diffIndex) => {
-          let { header, lines, path } = diff;
+        // each div contains all the checkboxes of a single file
+        <div key={fileIndex} >
+          <div style={{height: 28}} />
+          <div style={{ border: '1px solid white',}} >
+          {diffs.map( (diff, diffIndex) => {
+            let { header, lines, path } = diff;
 
-          const styles = {
-            checkbox: {
-              height: 13,
-              padding: 0,
-              margin: 0,
-              marginTop: 1,
-              marginBottom: 1,
-            }
-          };
-          // the header calls the callback with an array containing all the difflines
-          // and the line calls the callback with its corresponding diffline
-          return (
-            <div key={diffIndex} >
+            const styles = {
+              checkbox: {
+                height: 13,
+                padding: 0,
+                margin: 0,
+                marginTop: 1,
+                marginBottom: 1,
+              }
+            };
+            // the header calls the callback with an array containing all the difflines
+            // and the line calls the callback with its corresponding diffline
+            return (
+              <div key={diffIndex} >
 
-            <input type='checkbox' style={styles.checkbox}
-            onChange={(e) => {this.callbackHunk(e.target.checked,fileIndex, diffIndex);}} />
-            {lines.map( (line, lineIndex) => {
-              return <input type='checkbox' style={styles.checkbox}
-              key={lineIndex}
-              checked={this.state.checked[fileIndex][diffIndex][lineIndex]}
-              onChange={(e) => {this.callbackLine(e.target.checked, fileIndex, diffIndex, lineIndex);}} />;
-            })}
+              <input type='checkbox' style={styles.checkbox}
+              onChange={(e) => {this.callbackHunk(e.target.checked,fileIndex, diffIndex);}} />
+              {lines.map( (line, lineIndex) => {
+                return <input type='checkbox' style={styles.checkbox}
+                key={lineIndex}
+                checked={this.state.checked[fileIndex][diffIndex][lineIndex]}
+                onChange={(e) => {this.callbackLine(e.target.checked, fileIndex, diffIndex, lineIndex);}} />;
+              })}
 
-            </div>
-          );
+              </div>
+            );
 
-        })}
+          })}
+          </div>
         </div>
-      </div>
-      );
+        );
+      }
+      else {
+        diffTree.push(<Diff diff={diffDisplay} key={fileIndex} />);
+      }
 
     });
 
