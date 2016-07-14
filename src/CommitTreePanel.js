@@ -14,7 +14,7 @@ const constStyles = {
           Roboto,Helvetica,Arial,sans-serif,
           "Apple Color Emoji","Segoe UI Emoji",
           "Segoe UI Symbol"`,
-  bgColor: '#f1efef',
+  darkRed: '#b60a0a',
 };
 
 class gitFunctions {
@@ -90,9 +90,10 @@ class Commit extends React.Component {
         whiteSpace: 'nowrap',
         fontFamily: '"Roboto", sans-serif',
         padding: 1,
-        margin: 1,
+        margin: 0,
         backgroundColor: constStyles.bgColor,
-        borderBottom: '2px inset #d8d8d8',
+        borderBottom: '2px solid #ec8375',
+        color: constStyles.darkRed,
       },
       circleIcon: {
         minWidth: 13,
@@ -122,8 +123,8 @@ class Commit extends React.Component {
         position: 'absolute',
         left: '42%',
         width: 2,
-        height: 80,
-        backgroundColor: '#a9a7a7',
+        height: 90,
+        backgroundColor: constStyles.darkRed,
       }
     };
     const commit = this.props.commit;
@@ -132,7 +133,7 @@ class Commit extends React.Component {
       <div style={styles.commitDiv} onClick={() => { this.handleOnClick(commit) }} >
         <div style={styles.sideBar}>
           <div style={styles.line} />
-          <CircleIcon style={styles.circleIcon} color='#c1c1c1'/>
+          <CircleIcon style={styles.circleIcon} color={constStyles.darkRed}/>
         </div>
         <div style={styles.message} >
           <p style={{margin: 4}}>{commit.author}</p>
@@ -158,10 +159,11 @@ class CommitInfo extends React.Component {
 
     const styles= {
       main: {
-        backgroundColor: constStyles.bgColor,
+        backgroundColor: '#ffffff',
         fontFamily: constStyles.fontFamily,
         fontSize: 15,
-        border: '2px solid #d8d8d8',
+        border: '2px solid'+ constStyles.darkRed,
+        borderBottom: '1px solid'+ constStyles.darkRed,
         letterSpacing: -1,
       },
       margin: {
@@ -171,14 +173,14 @@ class CommitInfo extends React.Component {
         margin: 7,
         fontSize: 32,
         fontWeight: 700,
-        color: '#474747',
+        color: constStyles.darkRed,
       },
       message: {
-        color: '#656565',
+        color: constStyles.darkRed,
         fontSize: 20,
       },
       dateSha: {
-        color: '#656565',
+        color: constStyles.darkRed,
         fontSize: 15,
       }
     };
@@ -248,18 +250,19 @@ class CommitTree extends React.Component {
 
     const styles={
       commits: {
-        border: '2px solid #d8d8d8',
+        border: '2px solid'+ constStyles.darkRed,
         borderRadius: '0px 0px 4px 4px',
         overflow: 'auto',
         height: 350,
       },
       branchName: {
+        color: '#ffffff',
         display: 'flex',
         fontFamily: constStyles.fontFamily,
         fontWeight: 500,
         fontSize: 20,
-        backgroundColor: constStyles.bgColor,
-        border: '2px solid #d8d8d8',
+        backgroundColor: constStyles.darkRed,
+        border: '2px solid'+ constStyles.darkRed,
         borderBottom: 0,
         margin: 0,
         padding: 20,
@@ -274,9 +277,9 @@ class CommitTree extends React.Component {
       <div style={{display: 'flex'}} >
         <div style={{width: '35%'}}>
           <div style={styles.branchName}>
-            <img style={{width: 15, height: 24}} src={url}></img>
+            <img style={{width: 15, height: 24, fill: '#ffffff'}} src={url}></img>
             <div style={{width: 10}} />
-            <div style={{height: 24, color: '#6a6a6a'}}>{' '+this.props.branchRef.name}</div>
+            <div style={{height: 24, color: '#ffffff'}}>{' '+this.props.branchRef.name}</div>
           </div>
           <div style={styles.commits}>
             { rows }
@@ -284,7 +287,7 @@ class CommitTree extends React.Component {
         </div>
         <div style={{width: '65%', height: 500, overflow: 'auto'}}>
           <CommitInfo commit={this.state.selected_commit} />
-          <div style={{overflow: 'scroll', border: '2px solid #d8d8d8',}}>
+          <div style={{overflow: 'scroll', border: '2px solid'+constStyles.darkRed}}>
             <DiffPanel diffs={this.state.diffs} />
           </div>
         </div>
