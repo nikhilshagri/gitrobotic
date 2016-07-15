@@ -26,7 +26,11 @@ class SidePanel extends React.Component {
 
     this.props.refsData.forEach( (ref, index) => {
 
-      const listItem = <ListItem key={index} primaryText={ref.name} onClick={() => this.listItemClick(ref)} />;
+      const listItem = <ListItem key={index}
+      primaryText={ref.name}
+      onClick={() => this.listItemClick(ref)}
+      containerElement={<Link to='repoOps/commitTree' />}
+      linkButton={true} />;
 
       if(ref.type === 'LOCAL')
         locals.push(listItem);
@@ -46,10 +50,6 @@ class SidePanel extends React.Component {
     <div style={styles.main} >
       <List>
         <Subheader>Working Directory</Subheader>
-        <FlatButton
-          label='CommitTree'
-          containerElement={<Link to='repoOps/commitTree' />}
-          linkButton={true} />
         <FlatButton
           label='Staging Area'
           containerElement={<Link to='repoOps/stagingArea' />}
