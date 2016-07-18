@@ -7,6 +7,8 @@ import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton';
 
+var url = require("file!./../static/branchIcon.svg");
+
 const constStyles = {
   fontFamily: `apple-system,
           BlinkMacSystemFont,"Segoe UI",
@@ -55,6 +57,7 @@ class ListElement extends React.Component {
       style={this.state.focus?focus:notFocus}
       onMouseEnter={this.toggleFocus} onMouseLeave={this.toggleFocus}
       onClick={this.props.clickCB} >
+        <img style={{width: 8, height: 14}} src={url}></img>
         <div style={{paddingLeft: 15}}
         containerElement={<Link to='repoOps/commitTree' />}
         linkButton={true}>{this.props.name}</div>
@@ -79,6 +82,22 @@ class SidePanel extends React.Component {
 
     let locals = [];
     let remotes = [];
+
+    this.props.refsData.forEach( (ref, index) => {
+
+      const listItem =
+      <ListElement
+      name={ref.name}
+      link='repoOps/commitTree'
+      key={index}
+      clickCB={() => {this.listItemClick(ref);}} />;
+
+      if(ref.type === 'LOCAL')
+        locals.push(listItem);
+      else if(ref.name.match(/\/+/g))
+        remotes.push(listItem);
+    });
+
     const styles = {
       main: {
         ...this.props.styleInherited,
@@ -104,21 +123,6 @@ class SidePanel extends React.Component {
         cursor: 'pointer',
       }
     };
-
-    this.props.refsData.forEach( (ref, index) => {
-
-      const listItem =
-      <ListElement
-      name={ref.name}
-      link='repoOps/commitTree'
-      key={index}
-      clickCB={() => {this.listItemClick(ref);}} />;
-
-      if(ref.type === 'LOCAL')
-        locals.push(listItem);
-      else if(ref.name.match(/\/+/g))
-        remotes.push(listItem);
-    });
 
     return (
     <div style={styles.main} >
