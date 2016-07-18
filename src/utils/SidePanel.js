@@ -16,6 +16,53 @@ const constStyles = {
   darkRed: '#b60a0a',
 };
 
+class ListElement extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state={
+      focus: false
+    };
+  }
+
+  toggleFocus = () => {
+    this.setState( (prevState) => {
+      return {focus: !prevState.focus };
+    });
+  };
+
+  render = () => {
+
+    // these two objects are not defined under a styles object
+    const notFocus = {
+      display: 'flex',
+      alignItems: 'center',
+      fontFamily: constStyles.fontFamily,
+      color: 'white',
+      padding: 10,
+      paddingLeft: 40,
+      fontSize: 14,
+      cursor: 'pointer',
+      width: '100%',
+    };
+
+    const focus={
+      ...notFocus,
+      backgroundColor: '#900606'
+    };
+
+    return (
+      <div
+      style={this.state.focus?focus:notFocus}
+      onMouseEnter={this.toggleFocus} onMouseLeave={this.toggleFocus}
+      onClick={this.props.clickCB} >
+        <div style={{paddingLeft: 15}}
+        containerElement={<Link to='repoOps/commitTree' />}
+        linkButton={true}>{this.props.name}</div>
+      </div>
+    );
+  }
+}
+
 class SidePanel extends React.Component {
   constructor(props) {
     super(props);
@@ -47,22 +94,25 @@ class SidePanel extends React.Component {
         fontWeight: 600,
       },
       listItem: {
+        display: 'flex',
+        alignItems: 'center',
         fontFamily: constStyles.fontFamily,
         color: 'white',
-        padding: 4,
-        lineHeight: 0,
+        padding: 10,
+        paddingLeft: 40,
         fontSize: 14,
+        cursor: 'pointer',
       }
     };
 
     this.props.refsData.forEach( (ref, index) => {
 
-      const listItem = <ListItem key={index}
-      style={styles.listItem}
-      primaryText={ref.name}
-      onClick={() => this.listItemClick(ref)}
-      containerElement={<Link to='repoOps/commitTree' />}
-      linkButton={true} />;
+      const listItem =
+      <ListElement
+      name={ref.name}
+      link='repoOps/commitTree'
+      key={index}
+      clickCB={() => {this.listItemClick(ref);}} />;
 
       if(ref.type === 'LOCAL')
         locals.push(listItem);
