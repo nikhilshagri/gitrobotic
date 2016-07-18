@@ -8,6 +8,7 @@ import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton';
 
 var url = require("file!./../static/branchIcon.svg");
+var urlFolder = require("file!./../static/folderIcon.svg");
 
 const constStyles = {
   fontFamily: `apple-system,
@@ -82,6 +83,7 @@ class SidePanel extends React.Component {
 
     let locals = [];
     let remotes = [];
+    let remoteNames = [];
 
     this.props.refsData.forEach( (ref, index) => {
 
@@ -94,8 +96,17 @@ class SidePanel extends React.Component {
 
       if(ref.type === 'LOCAL')
         locals.push(listItem);
-      else if(ref.name.match(/\/+/g))
-        remotes.push(listItem);
+      else if(ref.name.match(/\/+/g)) {
+        let remoteName = ref.name.split('/')[0];
+        const index = remoteNames.indexOf(remoteName);
+        if(index === -1) {
+          remoteNames.push(remoteName);
+          remotes.push([]);
+        }
+        else {
+         remotes[index].push(React.cloneElement(listItem,{name: ref.name.split('/')[1]}));
+        }
+      }
     });
 
     const styles = {
@@ -124,6 +135,17 @@ class SidePanel extends React.Component {
       }
     };
 
+    // construct list component for remotes
+    // TODO: Insert custom made divs instead of ugly List components
+    const listRemotes = remoteNames.map( (remoteName, index) => {
+      if(remotes[index].length > 0) {
+        return <ListItem primaryText={remoteName} primaryTogglesNestedList={true}
+        leftIcon={<img style={{width: 15, height: 24}} src={urlFolder}></img>}
+        nestedItems={remotes[index]} key={index}
+        style={styles.listComponent}/>;
+      }
+    });
+
     return (
     <div style={styles.main} >
     <List>
@@ -143,9 +165,8 @@ class SidePanel extends React.Component {
             {locals}
           </List>
           <List>
-            <ListItem primaryText='Remote' primaryTogglesNestedList={true}
-            nestedItems={remotes}
-            style={styles.listComponent}/>
+            <Subheader style={styles.listComponent}>Remotes</Subheader>
+            {listRemotes}
           </List>
       </List>
     </List>
