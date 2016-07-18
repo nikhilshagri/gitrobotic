@@ -106,6 +106,7 @@ class RepoOps extends React.Component {
       },
       sidePanel: {
         width: '20%',
+        overflow: 'hidden'
       },
       tabs: {
         overflow: 'hidden',
