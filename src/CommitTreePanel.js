@@ -304,7 +304,7 @@ class CommitTree extends React.Component {
       <div style={{display: 'flex'}} >
         <div style={{width: '35%'}}>
           <div style={styles.branchName}>
-            <img style={{width: 15, height: 24, fill: '#ffffff'}} src={url}></img>
+            <img style={{width: 15, height: 24}} src={url}></img>
             <div style={{width: 10}} />
             <div style={{height: 24, color: '#ffffff'}}>{' '+this.props.branchRef.name}</div>
           </div>
