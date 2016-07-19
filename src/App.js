@@ -27,6 +27,15 @@ import Git from 'nodegit';
 
 const darkMuiTheme = getMuiTheme(darkBaseTheme);
 
+const constStyles = {
+  fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+  darkRed: '#b60a0a',
+};
+
 class gitFunctions {
   static repoExists(path) {
     const pathToRepo = require('path').resolve(path);
@@ -50,17 +59,19 @@ class MainToolbar extends React.Component {
   render = () => {
     const styles = {
       toolbar:{
-        backgroundColor: 'blue',
+        backgroundColor: '#900606',
         paddingLeft: '5%',
-        border: '1px solid black',
-        // boxShadow: '10px 10px 10px #888888',
-        zIndex: 100,
+        paddingBottom: 35,
+        border: '2px solid #900606',
       },
       button: {
         position: 'relative',
         marginRight: 5,
         marginLeft: 5,
-        backgroundColor: '#CACACA',
+        fontFamily: constStyles.fontFamily,
+        fontWeight: 800,
+        color: '#900606',
+        backgroundColor: '#ffffff',
       },
     };
     const repoButton = this.props.repoName?
@@ -182,7 +193,7 @@ class App extends React.Component {
     const styles = {
       mainPanel: {
         height:500,
-        border: '1px solid blue',
+        // border: '1px solid blue',
         overflow: 'hidden',
       },
       repos: {
