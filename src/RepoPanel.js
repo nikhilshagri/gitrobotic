@@ -6,6 +6,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FolderIcon from 'material-ui/svg-icons/file/folder';
 import Paper from 'material-ui/Paper';
 
+const constStyles = {
+  fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+  darkRed: '#b60a0a',
+};
 
 // import {dialog} from 'electron';
 const {dialog} = require('electron').remote;
@@ -23,17 +31,16 @@ class RepoTable extends React.Component {
   render() {
     const styles= {
       card:{
-        margin: 5,
-        marginTop: 10,
+        margin: 8,
+        marginTop: 7,
         cursor: 'pointer',
-        backgroundColor: '#C6C6C6',
-        // width: '30%',
+        color: constStyles.darkRed,
+        fontWeight: 800,
+        backgroundColor: '#FFFFFF',
       },
       main:{
         width: '20%',
-        height: '100%',
-        // backgroundColor: 'black',
-        // borderTop: '1px solid #464646',
+        backgroundColor: constStyles.darkRed,
         boxShadow: '7px 7px 7px #FFFFFF',
       }
     };
@@ -41,7 +48,9 @@ class RepoTable extends React.Component {
     let rows = [];
     this.props.repos.forEach((function(repo, index) {
         rows.push(
-          <Card style={styles.card} key={index} onMouseDown={this.handleClick.bind(this, index)} >
+          <Card style={styles.card}
+          key={index}
+          onMouseDown={this.handleClick.bind(this, index)} >
             <CardHeader title={repo.name} />
           </Card>
         );
