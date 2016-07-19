@@ -82,7 +82,8 @@ class SearchBar extends React.Component {
 
   render() {
     const style = {
-      margin:10
+      margin: 10,
+      marginTop: 20,
     };
 
     return (
@@ -98,7 +99,18 @@ class SearchBar extends React.Component {
 class Repo extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      focusPaper: false
+    }
   }
+
+  toggleFocus = () => {
+    this.setState((prevState) => {
+      return  {
+        focusPaper: !prevState.focusPaper
+      };
+    });
+  };
 
   dirSelect = (event) => {
     let path = dialog.showOpenDialog({
@@ -117,10 +129,23 @@ class Repo extends React.Component {
 
   render = () => {
 
+    const paperStyle = {
+      display: 'flex',
+      alignItems: 'center',
+      height: 50,
+      padding: 15,
+      fontSize: 30,
+      fontWeight: 700,
+      cursor: 'pointer',
+      fontFamily: constStyles.fontFamily,
+    };
+
     const styles={
       main:{
         display:'flex',
-        height: '100%'
+        height: '100%',
+        fontFamily: constStyles.fontFamily,
+        color:constStyles.darkRed,
       },
       selectDiv: {
         display: 'flex',
@@ -128,17 +153,11 @@ class Repo extends React.Component {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        backgroundColor: '#EAEAEA',
+        backgroundColor: '#FFFFFF',
         width: '100%',
       },
       para2: {
-        fontFamily: '"Roboto", sans-serif',
         fontSize: 15,
-        fontWeight: 700,
-      },
-      para1: {
-        fontFamily: '"Roboto", sans-serif',
-        fontSize: 20,
         fontWeight: 700,
       },
       containerDiv: {
@@ -146,31 +165,44 @@ class Repo extends React.Component {
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
-        // position: 'absolute',
         height: 'auto',
-        // left: '50%',
-        // top: '50%',
       },
       paper: {
-        textAlign: 'center',
-        height: 200,
-        width: 200,
-        border: '4px dotted black',
+        display: 'flex',
+        alignItems: 'center',
+        height: 50,
+        padding: 15,
+        fontSize: 30,
+        fontWeight: 700,
+        fontFamily: constStyles.fontFamily,
+        color:constStyles.darkRed,
+        border: '2px solid'+constStyles.darkRed,
         cursor: 'pointer',
       },
       folder: {
         width: 120,
         height: 120,
       },
+      focus: {
+        ...paperStyle,
+        color:'white',
+        backgroundColor: constStyles.darkRed,
+        border: '2px solid white',
+      },
+      notFocus: {
+        ...paperStyle,
+        color:constStyles.darkRed,
+        border: '2px solid'+constStyles.darkRed,
+      }
     };
     return (
-      <div style={this.props.style }>
         <div style={styles.main} >
           <RepoTable {...this.props} />
           <div style={styles.selectDiv} >
             <div style={styles.containerDiv} >
-              <Paper style={styles.paper} onClick={this.dirSelect}>
-                <FolderIcon style={styles.folder} />
+              <Paper style={this.state.focusPaper?styles.focus:styles.notFocus}
+              onClick={this.dirSelect}
+              onMouseEnter={this.toggleFocus} onMouseLeave={this.toggleFocus} >
                 <p style={styles.para1}>SELECT A FOLDER</p>
               </Paper>
               <p style={styles.para1} >OR..</p>
@@ -179,7 +211,6 @@ class Repo extends React.Component {
             </div>
           </div>
         </div>
-      </div>
     );
   }
 }
