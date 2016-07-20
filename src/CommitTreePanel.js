@@ -240,7 +240,7 @@ class CommitTree extends React.Component {
 
     //for CommitInfo component
     this.setState({
-      selected_commit: commit,
+      selected_commit: commit
     });
 
     gitFunctions.getCommitDiff(commit.sha, this.props.repo.path)
@@ -255,6 +255,8 @@ class CommitTree extends React.Component {
     this.setState({
       commits : commits
     });
+    // to load the first commit's diff info by default
+    this.getCommitDiff(commits[0]);
   }
 
   componentDidMount = () => {
