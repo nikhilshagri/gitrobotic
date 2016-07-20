@@ -46,6 +46,7 @@ class ListElement extends React.Component {
       fontSize: 14,
       cursor: 'pointer',
       width: '100%',
+        textDecoration: 'none'
     };
 
     const focus={
@@ -54,15 +55,12 @@ class ListElement extends React.Component {
     };
 
     return (
-      <div
+      <Link to='repoOps/commitTree'
       style={this.state.focus?focus:notFocus}
       onMouseEnter={this.toggleFocus} onMouseLeave={this.toggleFocus}
       onClick={this.props.clickCB} >
         <img style={{width: 8, height: 14}} src={url}></img>
-        <div style={{paddingLeft: 15}}
-        containerElement={<Link to='repoOps/commitTree' />}
-        linkButton={true}>{this.props.name}</div>
-      </div>
+        <div style={{paddingLeft: 15}} >{this.props.name}</div></Link>
     );
   }
 }
