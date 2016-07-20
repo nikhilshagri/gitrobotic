@@ -31,28 +31,34 @@ class RepoTable extends React.Component {
   render() {
     const styles= {
       card:{
-        margin: 8,
-        marginTop: 7,
+        margin: 10,
+        marginTop: 4,
+        marginBottom: 4,
         cursor: 'pointer',
+        padding: 15,
+        textOverflow: 'ellipsis',
         color: constStyles.darkRed,
-        fontWeight: 800,
+        fontWeight: 600,
         backgroundColor: '#FFFFFF',
+        borderRadius: 2,
       },
       main:{
         width: '20%',
         backgroundColor: constStyles.darkRed,
         boxShadow: '7px 7px 7px #FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
       }
     };
 
     let rows = [];
     this.props.repos.forEach((function(repo, index) {
         rows.push(
-          <Card style={styles.card}
+          <div style={styles.card}
           key={index}
           onMouseDown={this.handleClick.bind(this, index)} >
-            <CardHeader title={repo.name} />
-          </Card>
+          {repo.name}
+          </div>
         );
     }).bind(this));
     return (
@@ -81,16 +87,23 @@ class SearchBar extends React.Component {
   }
 
   render() {
-    const style = {
-      margin: 10,
-      marginTop: 20,
+    const styles = {
+      main: {
+        margin: 10,
+        marginTop: 20,
+      },
+      labelStyle: {
+        color: constStyles.darkRed,
+        fontFamily: constStyles.fontFamily,
+        fontWeight: 700,
+      }
     };
 
     return (
-      <div style={style} >
+      <div style={styles.main} >
         <input style={{width: 300, height: 30, fontSize: 20}} type="text" placeholder="Enter Repo path here..." ref="textField"
         value={this.state.value} onChange={this.updateValue} onKeyDown={this.sendQuery} />
-        <RaisedButton label="Get Commits!"  onMouseDown={this.sendQuery} />
+        <RaisedButton label="Get Commits!" labelStyle={styles.labelStyle} onMouseDown={this.sendQuery} />
       </div>
     )
   }
@@ -179,20 +192,16 @@ class Repo extends React.Component {
         border: '2px solid'+constStyles.darkRed,
         cursor: 'pointer',
       },
-      folder: {
-        width: 120,
-        height: 120,
-      },
       focus: {
         ...paperStyle,
         color:'white',
         backgroundColor: constStyles.darkRed,
-        border: '2px solid white',
+        border: '3px solid white',
       },
       notFocus: {
         ...paperStyle,
         color:constStyles.darkRed,
-        border: '2px solid'+constStyles.darkRed,
+        border: '3px solid'+constStyles.darkRed,
       }
     };
     return (
