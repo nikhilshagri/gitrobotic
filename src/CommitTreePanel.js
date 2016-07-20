@@ -1,4 +1,6 @@
 import React from 'react';
+
+import LinearProgress from 'material-ui/LinearProgress';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import CircleIcon from 'material-ui/svg-icons/av/fiber-manual-record';
 
@@ -201,7 +203,7 @@ class CommitInfo extends React.Component {
   }
 }
 
-class EmptyCommitInfo extends React.Component {
+class LoadingCommitInfo extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -210,17 +212,32 @@ class EmptyCommitInfo extends React.Component {
 
     const styles={
       main:{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '65%',
         border: '2px solid'+ constStyles.darkRed,
         color: constStyles.darkRed,
         fontFamily: constStyles.fontFamily,
-        fontSize: 50,
+        fontSize: 40,
         fontWeight: 800,
         letterSpacing: -2,
+      },
+      progressBar: {
+        marginTop: 15,
+        width: 200
       }
-    }
+    };
+
     return (
-      <div style={styles.main} >Select a commit!</div>
+      <div style={styles.main} >
+        Loading. Hang Tight!
+        <LinearProgress
+        color={constStyles.darkRed}
+        style={styles.progressBar}
+        mode="indeterminate" />
+      </div>
     );
   }
 }
@@ -321,7 +338,7 @@ class CommitTree extends React.Component {
               <DiffPanel diffs={this.state.diffs} />
             </div>
           </div>:
-          <EmptyCommitInfo />}
+          <LoadingCommitInfo />}
       </div>
     )
   }
