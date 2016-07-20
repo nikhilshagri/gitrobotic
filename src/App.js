@@ -59,40 +59,50 @@ class MainToolbar extends React.Component {
   render = () => {
     const styles = {
       toolbar:{
-        backgroundColor: '#900606',
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: '#790404',
+        padding: 12,
         paddingLeft: '5%',
-        paddingBottom: 35,
-        border: '2px solid #900606',
+        border: '2px solid #790404',
+        height: 40,
       },
       button: {
         position: 'relative',
+        margin: 35,
+        borderRadius: 2,
         marginRight: 5,
         marginLeft: 5,
         fontFamily: constStyles.fontFamily,
-        fontWeight: 800,
+        fontSize: 19,
+        fontWeight: 700,
+        letterSpacing: -1,
+        maxWidth: 140,
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textTransform: 'uppercase',
         color: '#900606',
+        textDecoration: 'none',
+        padding: 10,
         backgroundColor: '#ffffff',
       },
     };
-    const repoButton = this.props.repoName?
-                        <FlatButton style={styles.button}
-                          label={this.props.repoName}
-                          containerElement={<Link to='/repoOps' />}
-                          linkButton={true} />
-                          :<div />;
 
     return (
-        <Toolbar style={styles.toolbar} noGutter={false} >
-          <ToolbarGroup firstChild={true} >
+        <div style={styles.toolbar}>
+            <Link style={styles.button}
+            to='/repo'>
+              {'Repos'}
+            </Link>
 
-            <FlatButton style={styles.button}
-            containerElement={<Link to='/repo' />}
-            label='Repos'
-            linkButton={true} />
-
-            {repoButton}
-          </ToolbarGroup>
-        </Toolbar>
+            {this.props.repoName?
+            <Link to='/repoOps'
+            style={styles.button}>
+              {this.props.repoName}
+            </Link>
+              :<div />}
+        </div>
     );
   }
 } 
