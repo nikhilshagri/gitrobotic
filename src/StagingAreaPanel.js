@@ -115,13 +115,18 @@ class CheckBoxWrapper extends React.Component {
   render = () => {
     const styles={
       checkbox: {
-        marginBottom: 3
+        marginBottom: 6,
+      },
+      label: {
+        color: constStyles.darkRed,
+        fontFamily: constStyles.fontFamily,
+        fontSize: 15,
       }
     };
 
     return(
       <div>
-        <Checkbox style={styles.checkbox} label={this.props.label} 
+        <Checkbox style={styles.checkbox} label={this.props.label} labelStyle={styles.label}
         value={this.props.value} onCheck={this.onEventCheck} checked={this.state.checked} />
       </div>
     )
@@ -221,8 +226,8 @@ class StatusTable extends React.Component {
         let int = 1;
 
         if (status.isNew()) { words.push(<span key={int} style={{color:'green'}}>NEW</span>); flag = 1;}
-        if (status.isModified()) { words.push(<span key={int} style={{color:'yellow'}}>MODIFIED</span>); flag = 1;}
-        if (status.isTypechange()) { words.push(<span key={int} style={{color:'blue'}}>TYPECHANGED</span>); flag = 1;}
+        if (status.isModified()) { words.push(<span key={int} style={{color:'blue'}}>MODIFIED</span>); flag = 1;}
+        if (status.isTypechange()) { words.push(<span key={int} style={{color:'yellow'}}>TYPECHANGED</span>); flag = 1;}
         if (status.isRenamed()) { words.push(<span key={int} style={{color:'orange'}}>RENAMED</span>); flag = 1;}
         if (status.isIgnored()) { words.push(<span key={int} style={{color:'red'}}>IGNORED</span>); flag = 1; }
         if(flag == 0) { words.push(<span key={int} style={{color:'red'}}>DELETED</span>); }
@@ -272,7 +277,9 @@ class StatusTable extends React.Component {
       checkBox: {
         border: '2px solid'+constStyles.darkRed,
         margin: 5,
-        width: '90%',
+        marginTop: 13,
+        marginBottom: 13,
+        width: '95%',
       },
       checkBoxes: {
         display: 'flex',
