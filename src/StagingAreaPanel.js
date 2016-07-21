@@ -10,6 +10,15 @@ import CommitMessage from './utils/CommitMessage';
 
 import Git, { Diff } from 'nodegit';
 
+const constStyles = {
+  fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+  darkRed: '#b60a0a',
+};
+
 class gitFunctions {
 
   static createCommit(repoPath, oid, commitMsg) {
@@ -237,20 +246,52 @@ class StatusTable extends React.Component {
     }
 
     const styles = {
-      root:{
-        border: '1px solid black'
+      main:{
+        border: '2px solid'+constStyles.darkRed,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        borderLeft: '0px',
+        fontFamily: constStyles.fontFamily,
+        color: constStyles.darkRed,
       },
-      ul:{
-        listStyleType: 'none'
+      status: {
+        height: 50,
+        backgroundColor: constStyles.darkRed,
+        color: '#FFFFFF',
+        display: 'flex',
+        paddingLeft: '7%',
+        alignItems: 'center',
+        fontWeight: 700,
+      },
+      labelStyle: {
+        fontFamily: constStyles.fontFamily,
+        color:constStyles.darkRed,
+      },
+      checkBox: {
+        border: '2px solid'+constStyles.darkRed,
+        margin: 5,
+        width: '90%',
+      },
+      checkBoxes: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flexStart',
+        alignItems: 'center',
       }
     };
     return(
-      <div style={styles.root} >
-        <p>STATUS</p>
-        <Checkbox label='Select All:' ref={(ref) => this.selectAll = ref}  style={{width: 200}}
-        onCheck={this.checkSelectAll} checked={this.state.selectAll} labelPosition='left' />
-        <ChangesList ref={(ref) => this.changesList = ref} selectAll={this.state.selectAll}
-        statuses={localStatus} />
+      <div style={styles.main} >
+        <div style={styles.status} >STATUS</div>
+        <div style={styles.checkBoxes} >
+          <Checkbox label='Select All:'
+          labelStyle={styles.labelStyle}
+          ref={(ref) => this.selectAll = ref} style={styles.checkBox}
+          onCheck={this.checkSelectAll} checked={this.state.selectAll} labelPosition='left' />
+          <ChangesList ref={(ref) => this.changesList = ref} selectAll={this.state.selectAll}
+          statuses={localStatus} />
+        </div>
       </div>
     )
   }
@@ -384,6 +425,9 @@ class StagingArea extends React.Component {
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
+        color: constStyles.darkRed,
+        fontFamily: constStyles.darkRed,
+        border: '2px solid'+constStyles.darkRed,
       },
       selectiveDiffPanel: {
         width: '69%',
@@ -395,11 +439,11 @@ class StagingArea extends React.Component {
       <div style={styles.main} >
         <div style={styles.createCommit} >
           <div>
-            <RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
-            <CommitMessage buttonMsg='Create Commit!' commitCB={this.createCommit} />
-          </div>
             <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
+            <RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
             <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
+          </div>
+            <CommitMessage buttonMsg='Create Commit!' commitCB={this.createCommit} />
         </div>
         <div style={styles.selectiveDiffPanel} >
           <StageSelective diffs={this.state.diffs} repo={this.props.repo} />

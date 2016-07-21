@@ -3,6 +3,16 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
+const constStyles = {
+  fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+  darkRed: '#b60a0a',
+};
+
+
 class CommitMessage extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +40,7 @@ class CommitMessage extends React.Component {
           rows={2}
           rowsMax={2}
           onChange={(e) => { this.changeMessage(e)}} />
-        <RaisedButton label={this.props.buttonMsg} onMouseDown={this.callCB} />
+        <RaisedButton label={this.props.buttonMsg} labelColor={constStyles.darkRed} onMouseDown={this.callCB} />
       </div>
     );
   }
