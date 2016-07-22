@@ -167,8 +167,8 @@ class CommitInfo extends React.Component {
         backgroundColor: '#ffffff',
         fontFamily: constStyles.fontFamily,
         fontSize: 15,
-        border: '2px solid'+ constStyles.darkRed,
-        borderBottom: '1px solid'+ constStyles.darkRed,
+        border: '2px solid'+ constStyles.yellow,
+        borderBottom: '1px solid'+ constStyles.yellow,
         letterSpacing: -1,
       },
       margin: {
@@ -178,14 +178,14 @@ class CommitInfo extends React.Component {
         margin: 7,
         fontSize: 32,
         fontWeight: 700,
-        color: constStyles.darkRed,
+        color: constStyles.yellow,
       },
       message: {
-        color: constStyles.darkRed,
+        color: constStyles.yellow,
         fontSize: 20,
       },
       dateSha: {
-        color: constStyles.darkRed,
+        color: constStyles.yellow,
         fontSize: 15,
       }
     };
@@ -220,8 +220,8 @@ class LoadingCommitInfo extends React.Component {
         justifyContent: 'center',
         alignItems: 'center',
         width: '65%',
-        border: '2px solid'+ constStyles.darkRed,
-        color: constStyles.darkRed,
+        border: '2px solid'+ constStyles.yellow,
+        color: constStyles.yellow,
         fontFamily: constStyles.fontFamily,
         fontSize: 40,
         fontWeight: 800,
@@ -237,7 +237,7 @@ class LoadingCommitInfo extends React.Component {
       <div style={styles.main} >
         Loading. Hang Tight!
         <LinearProgress
-        color={constStyles.darkRed}
+        color={constStyles.yellow}
         style={styles.progressBar}
         mode="indeterminate" />
       </div>
@@ -339,7 +339,7 @@ class CommitTree extends React.Component {
         {this.state.selected_commit?
           <div style={{width: '65%', height: 500, overflow: 'auto'}}>
             <CommitInfo commit={this.state.selected_commit} />
-            <div style={{overflow: 'scroll', border: '2px solid'+constStyles.darkRed}}>
+            <div style={{overflow: 'scroll', border: '2px solid'+constStyles.yellow}}>
               <DiffPanel diffs={this.state.diffs} />
             </div>
           </div>:
