@@ -17,6 +17,8 @@ const constStyles = {
           "Apple Color Emoji","Segoe UI Emoji",
           "Segoe UI Symbol"`,
   darkRed: '#b60a0a',
+  grey: '#ededed',
+  borderGrey: '#7e7e7e',
 };
 
 class ListElement extends React.Component {
@@ -40,8 +42,9 @@ class ListElement extends React.Component {
       display: 'flex',
       alignItems: 'center',
       fontFamily: constStyles.fontFamily,
-      color: 'white',
+      color: 'black',
       padding: 10,
+      fontWeight: 500,
       paddingLeft: 40,
       fontSize: 14,
       cursor: 'pointer',
@@ -51,7 +54,7 @@ class ListElement extends React.Component {
 
     const focus={
       ...notFocus,
-      backgroundColor: '#900606'
+      backgroundColor: '#c8c8c8'
     };
 
     return (
@@ -110,22 +113,23 @@ class SidePanel extends React.Component {
     const styles = {
       main: {
         ...this.props.styleInherited,
-        border: '2px solid'+constStyles.darkRed,
+        border: '2px solid'+constStyles.borderGrey,
         fontFamily: constStyles.fontFamily,
-        backgroundColor: constStyles.darkRed,
+        backgroundColor: constStyles.grey,
         overflow: 'scroll',
         height: 450
       },
       listComponent: {
         fontFamily: constStyles.fontFamily,
-        color: 'white',
+        color: 'black',
         fontWeight: 600,
       },
       listItem: {
         display: 'flex',
         alignItems: 'center',
         fontFamily: constStyles.fontFamily,
-        color: 'white',
+        fontWeight: 600,
+        color: 'black',
         padding: 10,
         paddingLeft: 40,
         fontSize: 14,
@@ -138,7 +142,7 @@ class SidePanel extends React.Component {
     const listRemotes = remoteNames.map( (remoteName, index) => {
       if(remotes[index].length > 0) {
         return <ListItem primaryText={remoteName} primaryTogglesNestedList={true}
-        leftIcon={<img style={{width: 15, height: 24}} src={urlFolder}></img>}
+        leftIcon={<img style={{width: 15, height: 24, fill: 'black'}} src={urlFolder}></img>}
         nestedItems={remotes[index]} key={index}
         style={styles.listComponent}/>;
       }
