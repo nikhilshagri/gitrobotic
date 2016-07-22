@@ -113,7 +113,7 @@ class SidePanel extends React.Component {
     const styles = {
       main: {
         ...this.props.styleInherited,
-        border: '2px solid'+constStyles.borderGrey,
+        // border: '2px solid'+constStyles.borderGrey,
         fontFamily: constStyles.fontFamily,
         backgroundColor: constStyles.grey,
         overflow: 'scroll',

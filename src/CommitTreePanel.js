@@ -17,6 +17,9 @@ const constStyles = {
           "Apple Color Emoji","Segoe UI Emoji",
           "Segoe UI Symbol"`,
   darkRed: '#b60a0a',
+  grey: '#ededed',
+  borderGrey: '#7e7e7e',
+  yellow: '#b97005',
 };
 
 class gitFunctions {
@@ -93,9 +96,9 @@ class Commit extends React.Component {
         fontFamily: '"Roboto", sans-serif',
         padding: 1,
         margin: 0,
-        backgroundColor: constStyles.bgColor,
-        borderBottom: '2px solid #ec8375',
-        color: constStyles.darkRed,
+        backgroundColor: '#fff6dc',
+        borderBottom: '2px solid #ffffff',
+        color: constStyles.yellow,
       },
       circleIcon: {
         minWidth: 13,
@@ -126,7 +129,7 @@ class Commit extends React.Component {
         left: '42%',
         width: 2,
         height: 90,
-        backgroundColor: constStyles.darkRed,
+        backgroundColor: constStyles.yellow,
       }
     };
     const commit = this.props.commit;
@@ -135,7 +138,7 @@ class Commit extends React.Component {
       <div style={styles.commitDiv} onClick={() => { this.handleOnClick(commit) }} >
         <div style={styles.sideBar}>
           <div style={styles.line} />
-          <CircleIcon style={styles.circleIcon} color={constStyles.darkRed}/>
+          <CircleIcon style={styles.circleIcon} color={constStyles.yellow}/>
         </div>
         <div style={styles.message} >
           <p style={{margin: 4}}>{commit.author}</p>
@@ -296,20 +299,22 @@ class CommitTree extends React.Component {
 
     const styles={
       commits: {
-        border: '2px solid'+ constStyles.darkRed,
+        border: '2px solid'+ constStyles.yellow,
+        borderTop: '0px',
         borderRadius: '0px 0px 4px 4px',
         overflow: 'auto',
         height: 350,
       },
       branchName: {
-        color: '#ffffff',
+        color: constStyles.yellow,
         display: 'flex',
         fontFamily: constStyles.fontFamily,
         fontWeight: 500,
         fontSize: 20,
-        backgroundColor: constStyles.darkRed,
-        border: '2px solid'+ constStyles.darkRed,
-        borderBottom: 0,
+        backgroundColor: '#fff6dc',
+        border: '2px solid'+ constStyles.yellow,
+        borderBottom: '1px solid'+ constStyles.yellow,
+        zIndex: 10,
         margin: 0,
         padding: 20,
       },
@@ -325,7 +330,7 @@ class CommitTree extends React.Component {
           <div style={styles.branchName}>
             <img style={{width: 15, height: 24}} src={url}></img>
             <div style={{width: 10}} />
-            <div style={{height: 24, color: '#ffffff'}}>{' '+this.props.branchRef.name}</div>
+            <div style={{height: 24,}}>{' '+this.props.branchRef.name}</div>
           </div>
           <div style={styles.commits}>
             { rows }
