@@ -61,10 +61,10 @@ class MainToolbar extends React.Component {
       toolbar:{
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: '#790404',
+        backgroundColor: '#c4c4c4',
         padding: 12,
         paddingLeft: '5%',
-        border: '2px solid #790404',
+        border: '2px solid #c4c4c4',
         height: 40,
       },
       button: {
@@ -74,34 +74,34 @@ class MainToolbar extends React.Component {
         marginRight: 5,
         marginLeft: 5,
         fontFamily: constStyles.fontFamily,
-        fontSize: 19,
-        fontWeight: 700,
+        fontSize: 17,
+        fontWeight: 600,
         letterSpacing: -1,
         maxWidth: 140,
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textTransform: 'uppercase',
-        color: '#900606',
+        color: '#454545',
         textDecoration: 'none',
-        padding: 10,
+        padding: 7,
         backgroundColor: '#ffffff',
-      },
+      }
     };
 
     return (
         <div style={styles.toolbar}>
-            <Link style={styles.button}
-            to='/repo'>
-              {'Repos'}
-            </Link>
+          <Link style={styles.button}
+          to='/repo'>
+            {'Repos'}
+          </Link>
 
-            {this.props.repoName?
-            <Link to='/repoOps'
-            style={styles.button}>
-              {this.props.repoName}
-            </Link>
-              :<div />}
+          {this.props.repoName?
+          <Link to='/repoOps'
+          style={styles.button}>
+            {this.props.repoName}
+          </Link>
+            :<div />}
         </div>
     );
   }
