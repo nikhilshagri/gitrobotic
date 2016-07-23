@@ -17,6 +17,7 @@ const constStyles = {
           "Apple Color Emoji","Segoe UI Emoji",
           "Segoe UI Symbol"`,
   darkRed: '#b60a0a',
+  grey: '#ededed',
 };
 
 class gitFunctions {
@@ -432,9 +433,9 @@ class StagingArea extends React.Component {
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
-        color: constStyles.darkRed,
-        fontFamily: constStyles.darkRed,
-        border: '2px solid'+constStyles.darkRed,
+        color: constStyles.grey,
+        fontFamily: constStyles.grey,
+        border: '2px solid'+constStyles.grey,
       },
       selectiveDiffPanel: {
         width: '69%',
