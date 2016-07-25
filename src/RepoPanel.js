@@ -13,6 +13,8 @@ const constStyles = {
           "Apple Color Emoji","Segoe UI Emoji",
           "Segoe UI Symbol"`,
   darkRed: '#b60a0a',
+  grey: '#f9f9f9',
+  borderGrey: '#7e7e7e',
 };
 
 // import {dialog} from 'electron';
@@ -39,15 +41,16 @@ class RepoTable extends React.Component {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
-        color: constStyles.darkRed,
+        color: 'black',
         fontWeight: 600,
         backgroundColor: '#FFFFFF',
         borderRadius: 2,
+        borderLeft: '3px solid #C1C1C1',
       },
       main:{
         width: '17%',
-        backgroundColor: constStyles.darkRed,
-        boxShadow: '7px 7px 7px #FFFFFF',
+        paddingTop: 7,
+        backgroundColor: constStyles.grey,
         display: 'flex',
         flexDirection: 'column',
       }
@@ -98,12 +101,18 @@ class SearchBar extends React.Component {
         color: constStyles.darkRed,
         fontFamily: constStyles.fontFamily,
         fontWeight: 700,
+      },
+      input: {
+        width: 300,
+        height: 30,
+        fontSize: 20,
+        color: constStyles.darkRed
       }
     };
 
     return (
       <div style={styles.main} >
-        <input style={{width: 300, height: 30, fontSize: 20}} type="text" placeholder="Enter Repo path here..." ref="textField"
+        <input style={styles.input} type="text" placeholder="Enter Repo path here..." ref="textField"
         value={this.state.value} onChange={this.updateValue} onKeyDown={this.sendQuery} />
         <RaisedButton label="Get Commits!" labelStyle={styles.labelStyle} onMouseDown={this.sendQuery} />
       </div>
