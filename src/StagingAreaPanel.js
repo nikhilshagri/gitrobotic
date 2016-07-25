@@ -234,14 +234,14 @@ class StatusTable extends React.Component {
       const statusToText=function(status) {
         let words=[];
         let flag = 0;
-        let int = 1;
+        let key = 0;
 
-        if (status.isNew()) { words.push(<span key={int} style={{color:'green'}}>NEW</span>); flag = 1;}
-        if (status.isModified()) { words.push(<span key={int} style={{color:'blue'}}>MODIFIED</span>); flag = 1;}
-        if (status.isTypechange()) { words.push(<span key={int} style={{color:'yellow'}}>TYPECHANGED</span>); flag = 1;}
-        if (status.isRenamed()) { words.push(<span key={int} style={{color:'orange'}}>RENAMED</span>); flag = 1;}
-        if (status.isIgnored()) { words.push(<span key={int} style={{color:'red'}}>IGNORED</span>); flag = 1; }
-        if(flag == 0) { words.push(<span key={int} style={{color:'red'}}>DELETED</span>); }
+        if (status.isNew()) { words.push(<span key={key} style={{color:'green'}}>N</span>); flag = 1;}
+        if (status.isModified()) { words.push(<span key={key} style={{color:'blue'}}>M</span>); flag = 1;}
+        if (status.isTypechange()) { words.push(<span key={key} style={{color:'yellow'}}>TYPECHANGED</span>); flag = 1;}
+        if (status.isRenamed()) { words.push(<span key={key} style={{color:'orange'}}>RENAMED</span>); flag = 1;}
+        if (status.isIgnored()) { words.push(<span key={key} style={{color:'red'}}>IGNORED</span>); flag = 1; }
+        if(flag == 0) { words.push(<span key={key} style={{color:'red'}}>D</span>); }
 
         return words;
       };
