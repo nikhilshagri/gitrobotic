@@ -18,6 +18,8 @@ const constStyles = {
           "Segoe UI Symbol"`,
   darkRed: '#b60a0a',
   grey: '#ededed',
+  blue: '#9CE8FA',
+  darkBlue: '#0C6990'
 };
 
 class gitFunctions {
@@ -119,9 +121,10 @@ class CheckBoxWrapper extends React.Component {
         marginBottom: 6,
       },
       label: {
-        color: constStyles.darkRed,
+        color: constStyles.darkBlue,
         fontFamily: constStyles.fontFamily,
         fontSize: 15,
+        width: '100%',
       }
     };
 
@@ -160,8 +163,16 @@ class ChangesList extends React.Component {
                       onChangeSelected={this.props.onChangeSelected} checked={this.props.selectAll} value={status.value} />;
         });
     }
+
+    const styles = {
+      main: {
+        width: '90%',
+        paddingLeft: '5%',
+        paddingRight: '5%'
+      }
+    };
     return(
-      <div>
+      <div style={styles.main}>
         {renderStatus}
       </div>
     )
@@ -212,7 +223,6 @@ class StatusTable extends React.Component {
       this.getStatus(newprops.repo.path);
   }
 
-
   render = () => {
     let localStatus = [];
     if(this.state.statuses.length === 0)
@@ -243,6 +253,19 @@ class StatusTable extends React.Component {
         changes.push(<span key={0} >{file.path()}</span>);
         changes.push(change);
 
+        const styles = {
+          main: {
+            display: 'flex',
+            justifyContent: 'space-between',
+          },
+          path: {
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            width: '90%',
+          }
+        };
+
         return ({
           label:changes,
           value: file.path()
@@ -253,19 +276,20 @@ class StatusTable extends React.Component {
 
     const styles = {
       main:{
-        border: '2px solid'+constStyles.darkRed,
+        width: '100%',
+        border: '2px solid'+constStyles.blue,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'stretch',
         borderLeft: '0px',
         fontFamily: constStyles.fontFamily,
-        color: constStyles.darkRed,
+        color: constStyles.darkBlue,
       },
       status: {
         height: 50,
-        backgroundColor: constStyles.darkRed,
-        color: '#FFFFFF',
+        backgroundColor: constStyles.blue,
+        color:  constStyles.darkBlue,
         display: 'flex',
         paddingLeft: '7%',
         alignItems: 'center',
@@ -273,10 +297,10 @@ class StatusTable extends React.Component {
       },
       labelStyle: {
         fontFamily: constStyles.fontFamily,
-        color:constStyles.darkRed,
+        color:constStyles.darkBlue,
       },
       checkBox: {
-        border: '2px solid'+constStyles.darkRed,
+        border: '2px solid'+constStyles.blue,
         margin: 5,
         marginTop: 13,
         marginBottom: 13,
@@ -311,6 +335,12 @@ class IndexTable extends React.Component {
   }
 
   render = () => {
+    const styles = {
+      main: {
+        fontFamily: constStyles.fontFamily,
+        color: constStyles.darkBlue
+      }
+    }
     return (
       <div>
         {this.props.indexEntries.map( (entry, index) => {
@@ -430,6 +460,7 @@ class StagingArea extends React.Component {
         display: 'flex',
       },
       createCommit: {
+        overflow: 'auto',
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
