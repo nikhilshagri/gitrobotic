@@ -131,7 +131,7 @@ class CheckBoxWrapper extends React.Component {
     return(
       <div>
         <Checkbox style={styles.checkbox} label={this.props.label} labelStyle={styles.label}
-        value={this.props.value} onCheck={this.onEventCheck} checked={this.state.checked} />
+         onCheck={this.onEventCheck} checked={this.state.checked} />
       </div>
     )
   }
@@ -160,7 +160,7 @@ class ChangesList extends React.Component {
       renderStatus = this.props.statuses.map((status, index) => {
                       return <CheckBoxWrapper key={index} uniqueId={index} label={status.label} 
                       ref={(ref) => this.checkboxRefs[index] = ref}
-                      onChangeSelected={this.props.onChangeSelected} checked={this.props.selectAll} value={status.value} />;
+                      onChangeSelected={this.props.onChangeSelected} checked={this.props.selectAll} />;
         });
     }
 
@@ -249,9 +249,6 @@ class StatusTable extends React.Component {
       localStatus = this.state.statuses.map((file, index) => {
 
         let change=statusToText(file);
-        let changes =[];
-        changes.push(<span key={0} >{file.path()}</span>);
-        changes.push(change);
 
         const styles = {
           main: {
@@ -266,9 +263,15 @@ class StatusTable extends React.Component {
           }
         };
 
+        let changes = (
+          <div key={index} style={styles.main}>
+            <div style={styles.path}>{file.path()}</div>
+            <div style={{textAlign:'right'}}>{change}</div>
+          </div>
+        );
+
         return ({
-          label:changes,
-          value: file.path()
+          label:changes
         });
 
       });
