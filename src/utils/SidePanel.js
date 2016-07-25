@@ -17,7 +17,7 @@ const constStyles = {
           "Apple Color Emoji","Segoe UI Emoji",
           "Segoe UI Symbol"`,
   darkRed: '#b60a0a',
-  grey: '#ededed',
+  grey: '#f9f9f9',
   borderGrey: '#7e7e7e',
 };
 

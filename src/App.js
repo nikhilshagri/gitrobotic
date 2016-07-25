@@ -61,10 +61,10 @@ class MainToolbar extends React.Component {
       toolbar:{
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: '#c4c4c4',
+        backgroundColor: '#EAEAEA',
         padding: 12,
         paddingLeft: '5%',
-        border: '2px solid #c4c4c4',
+        border: '2px solid #EAEAEA',
         height: 40,
       },
       button: {
