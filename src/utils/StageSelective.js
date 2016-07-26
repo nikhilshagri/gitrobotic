@@ -15,6 +15,18 @@ const gitFunctions = {
   }
 };
 
+const constStyles = {
+  fontFamily: `apple-system,
+          BlinkMacSystemFont,"Segoe UI",
+          Roboto,Helvetica,Arial,sans-serif,
+          "Apple Color Emoji","Segoe UI Emoji",
+          "Segoe UI Symbol"`,
+  darkRed: '#b60a0a',
+  grey: '#ededed',
+  blue: '#9CE8FA',
+  darkBlue: '#0C6990'
+};
+
 class StageSelective extends React.Component {
   constructor(props) {
     super(props);
@@ -88,18 +100,29 @@ class StageSelective extends React.Component {
   render = () => {
 
     const styles = {
+      main: {
+        display: 'flex',
+        flexDirection: 'column',
+        border: '4px solid'+constStyles.blue,
+        borderLeft: '2px solid'+constStyles.blue,
+      },
       commitmsg: {
         paddingLeft: '5%',
         paddingBottom: 15,
         width: '50%',
       },
+      cover: {
+        borderBottom: '4px solid'+constStyles.blue,
+      }
     };
 
     return (
+      <div style={styles.main} >
         <div style={styles.cover}>
           <div style={styles.commitmsg} >
             <CommitMessage buttonMsg='Commit selected lines!' commitCB={this.collectCheckedLines} />
           </div>
+        </div>
         <DiffPanel {...this.props} showSelect={true} ref={(ref) => this.diffPanel = ref} />
       </div>
     );
