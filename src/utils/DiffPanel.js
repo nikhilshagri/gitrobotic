@@ -191,7 +191,7 @@ class DiffPanel extends React.Component {
 
         // each div contains all the checkboxes of a single file
         <div key={fileIndex} >
-          <div style={{height: 28}} />
+          <div style={{height: 25}} />
           <div style={{ border: '1px solid white',}} >
           {diffs.map( (diff, diffIndex) => {
             let { header, lines, path } = diff;
