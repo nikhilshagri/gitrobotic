@@ -164,7 +164,7 @@ class CommitInfo extends React.Component {
 
     const styles= {
       main: {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#fffdf8',
         fontFamily: constStyles.fontFamily,
         fontSize: 15,
         border: '2px solid'+ constStyles.yellow,
