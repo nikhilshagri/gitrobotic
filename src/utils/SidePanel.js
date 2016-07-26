@@ -122,6 +122,11 @@ class SidePanel extends React.Component {
       listComponent: {
         fontFamily: constStyles.fontFamily,
         color: 'black',
+        fontSize: 15,
+        fontWeight: 600,
+      },
+      listRemote: {
+        fontSize: 14,
         fontWeight: 600,
       },
       listItem: {
@@ -144,7 +149,7 @@ class SidePanel extends React.Component {
         return <ListItem primaryText={remoteName} primaryTogglesNestedList={true}
         leftIcon={<img style={{width: 15, height: 24, fill: 'black'}} src={urlFolder}></img>}
         nestedItems={remotes[index]} key={index}
-        style={styles.listComponent}/>;
+        style={styles.listRemote}/>;
       }
     });
 
