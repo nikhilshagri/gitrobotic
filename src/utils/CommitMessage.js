@@ -10,6 +10,8 @@ const constStyles = {
           "Apple Color Emoji","Segoe UI Emoji",
           "Segoe UI Symbol"`,
   darkRed: '#b60a0a',
+  blue: '#9CE8FA',
+  darkBlue: '#0C6990'
 };
 
 
@@ -32,15 +34,25 @@ class CommitMessage extends React.Component {
   }
 
   render = () => {
+
+    const styles = {
+      main: {
+        borderBottom: '2px solid'+constStyles.blue
+      },
+      textarea: {
+        color: constStyles.darkBlue,
+      }
+    };
     return (
-      <div>
+      <div style={styles.main} >
         <TextField
           hintText="Enter commit message..."
           multiLine={true}
           rows={2}
           rowsMax={2}
+          textareaStyle={styles.textarea}
           onChange={(e) => { this.changeMessage(e)}} />
-        <RaisedButton label={this.props.buttonMsg} labelColor={constStyles.darkRed} onMouseDown={this.callCB} />
+        <RaisedButton label={this.props.buttonMsg} labelColor={constStyles.darkBlue} onMouseDown={this.callCB} />
       </div>
     );
   }
