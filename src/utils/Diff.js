@@ -81,22 +81,31 @@ class Diff extends React.Component {
     });
 
     const styles = {
+      main: {
+        margin: 5,
+        borderRadius: 10,
+      },
       negPos: {
-        border: '1px solid grey', 
+        border: '1px solid'+this.props.diffStyle.border.color,
         borderRight: '',
         width: 40,
         color: 'rgba(0,0,0,0.3)',
         textAlign: 'center',
       },
+      diffLines: {
+        border: '1px solid'+this.props.diffStyle.border.color,
+        width: '100%',
+        overflow: 'auto'
+      }
     };
 
     return (
-      <div style={{margin: 5, borderRadius: 10}} >
+      <div style={styles.main} >
         <code style={{whiteSpace: 'pre', }} >{this.props.diff.path}</code>
         <div style={{display: 'flex', flexDirection: 'row', margin: 5, }} >
           <div style={styles.negPos} >{negDiffs}</div>
           <div style={styles.negPos} >{posDiffs}</div>
-          <div style={{border: '1px solid grey', width: '100%', overflow: 'auto'}} >{diffLines}</div>
+          <div style={styles.diffLines} >{diffLines}</div>
         </div>
         </div>
     );

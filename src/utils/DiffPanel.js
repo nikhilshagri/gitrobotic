@@ -144,6 +144,8 @@ class DiffPanel extends React.Component {
 
   render = () => {
 
+    const diffStyle = this.props.diffStyle;
+
     let diffTree = [];
     let diffSelect = [];
 
@@ -163,12 +165,26 @@ class DiffPanel extends React.Component {
 
       // collecting all the header and lines of the hunks in a single file
       // and putting them in a diffDisplay object
+      const styles={
+        span: {
+          fontWeight: 600,
+          color: diffStyle.type.color,
+        },
+        file: {
+          color: diffStyle.file.color,
+        }
+      }
       let diffDisplay = {
         lines:formattedLines,
-        path: 'old:'+path.old+' new:'+path.new,
+        path: <div style={styles.file}>
+                <span style={styles.span}> old </span>
+                {path.old}
+                <span style={styles.span}> new </span>
+                {path.new}
+              </div>,
       };
       if(isModified) {
-        diffTree.unshift(<Diff diff={diffDisplay} key={fileIndex} />);
+        diffTree.unshift(<Diff diff={diffDisplay} key={fileIndex} diffStyle={diffStyle} />);
 
         // creating a column of checboxes to select individual lines/hunks
         diffSelect.unshift(
@@ -212,7 +228,7 @@ class DiffPanel extends React.Component {
         );
       }
       else {
-        diffTree.push(<Diff diff={diffDisplay} key={fileIndex} />);
+        diffTree.push(<Diff diff={diffDisplay} key={fileIndex} diffStyle={diffStyle} />);
       }
 
     });

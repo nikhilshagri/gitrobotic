@@ -318,6 +318,17 @@ class CommitTree extends React.Component {
         margin: 0,
         padding: 20,
       },
+      diffProps: {
+        type: {
+          color: constStyles.yellow,
+        },
+        file: {
+          color: constStyles.yellow,
+        },
+        border: {
+          color: constStyles.yellow,
+        }
+      }
     };
 
     let rows=[];
@@ -340,7 +351,7 @@ class CommitTree extends React.Component {
           <div style={{width: '65%', height: 500, overflow: 'auto'}}>
             <CommitInfo commit={this.state.selected_commit} />
             <div style={{overflow: 'scroll', border: '2px solid'+constStyles.yellow}}>
-              <DiffPanel diffs={this.state.diffs} />
+              <DiffPanel diffs={this.state.diffs} diffStyle={styles.diffProps} />
             </div>
           </div>:
           <LoadingCommitInfo />}

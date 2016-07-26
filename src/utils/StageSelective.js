@@ -117,6 +117,17 @@ class StageSelective extends React.Component {
       },
       diff: {
         overflow: 'auto'
+      },
+      diffProps: {
+        type: {
+          color: constStyles.darkBlue,
+        },
+        file: {
+          color: constStyles.darkBlue
+        },
+        border: {
+          color: constStyles.darkBlue
+        }
       }
     };
 
@@ -128,7 +139,11 @@ class StageSelective extends React.Component {
           </div>
         </div>
         <div style={styles.diff}>
-          <DiffPanel {...this.props} showSelect={true} ref={(ref) => this.diffPanel = ref} />
+          <DiffPanel
+          {...this.props}
+          showSelect={true}
+          ref={(ref) => this.diffPanel = ref}
+          diffStyle={styles.diffProps} />
         </div>
       </div>
     );
