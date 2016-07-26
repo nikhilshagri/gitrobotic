@@ -101,6 +101,7 @@ class StageSelective extends React.Component {
 
     const styles = {
       main: {
+        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         border: '4px solid'+constStyles.blue,
@@ -113,6 +114,9 @@ class StageSelective extends React.Component {
       },
       cover: {
         borderBottom: '4px solid'+constStyles.blue,
+      },
+      diff: {
+        overflow: 'auto'
       }
     };
 
@@ -123,7 +127,9 @@ class StageSelective extends React.Component {
             <CommitMessage buttonMsg='Commit selected lines!' commitCB={this.collectCheckedLines} />
           </div>
         </div>
-        <DiffPanel {...this.props} showSelect={true} ref={(ref) => this.diffPanel = ref} />
+        <div style={styles.diff}>
+          <DiffPanel {...this.props} showSelect={true} ref={(ref) => this.diffPanel = ref} />
+        </div>
       </div>
     );
   }
