@@ -142,8 +142,6 @@ class SidePanel extends React.Component {
       }
     };
 
-    // construct list component for remotes
-    // TODO: Insert custom made divs instead of ugly List components
     const listRemotes = remoteNames.map( (remoteName, index) => {
       if(remotes[index].length > 0) {
         return <ListItem primaryText={remoteName} primaryTogglesNestedList={true}
