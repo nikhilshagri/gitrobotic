@@ -41,11 +41,11 @@ class RepoTable extends React.Component {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
-        color: 'black',
+        color: constStyles.darkRed,
         fontWeight: 600,
         backgroundColor: '#FFFFFF',
         borderRadius: 2,
-        borderLeft: '3px solid #C1C1C1',
+        borderLeft: '3px solid'+constStyles.darkRed,
       },
       main:{
         width: '17%',
