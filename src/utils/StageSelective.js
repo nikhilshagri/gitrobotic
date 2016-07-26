@@ -86,9 +86,20 @@ class StageSelective extends React.Component {
   }
 
   render = () => {
+
+    const styles = {
+      commitmsg: {
+        paddingLeft: '5%',
+        paddingBottom: 15,
+        width: '50%',
+      },
+    };
+
     return (
-      <div>
-        <CommitMessage buttonMsg='Commit selected lines!' commitCB={this.collectCheckedLines} />
+        <div style={styles.cover}>
+          <div style={styles.commitmsg} >
+            <CommitMessage buttonMsg='Commit selected lines!' commitCB={this.collectCheckedLines} />
+          </div>
         <DiffPanel {...this.props} showSelect={true} ref={(ref) => this.diffPanel = ref} />
       </div>
     );

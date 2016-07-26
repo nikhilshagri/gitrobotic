@@ -493,6 +493,10 @@ class StagingArea extends React.Component {
         width: '69%',
         height: 500,
         overflow: 'auto',
+      },
+      commitmsg: {
+        borderTop: '2px solid'+constStyles.blue,
+        borderBottom: '2px solid'+constStyles.blue,
       }
     };
     return (
@@ -501,11 +505,14 @@ class StagingArea extends React.Component {
           <div>
             <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
             <RaisedButton
+            style={{width: '100%'}}
             label='Add to Index!'
             labelColor={constStyles.darkBlue} onMouseDown={this.addToIndex} />
             <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
           </div>
+          <div style={styles.commitmsg} >
             <CommitMessage buttonMsg='Create Commit!' commitCB={this.createCommit} />
+          </div>
         </div>
         <div style={styles.selectiveDiffPanel} >
           <StageSelective diffs={this.state.diffs} repo={this.props.repo} />
