@@ -115,6 +115,12 @@ class StageSelective extends React.Component {
       cover: {
         borderBottom: '4px solid'+constStyles.blue,
       },
+      title: {
+        padding: 10,
+        color: constStyles.darkBlue,
+        fontFamily: `'Oswald', sans-serif`,
+        fontSize: 16,
+      },
       diff: {
         overflow: 'auto'
       },
@@ -133,6 +139,9 @@ class StageSelective extends React.Component {
 
     return (
       <div style={styles.main} >
+        <div style={styles.title} >
+          Selective Staging: Stage individual lines/hunk (modified files only)
+        </div>
         <div style={styles.cover}>
           <div style={styles.commitmsg} >
             <CommitMessage buttonMsg='Commit selected lines!' commitCB={this.collectCheckedLines} />
