@@ -166,9 +166,9 @@ class ChangesList extends React.Component {
 
     const styles = {
       main: {
-        width: '90%',
+        width: '85%',
         paddingLeft: '5%',
-        paddingRight: '5%'
+        paddingRight: '10%'
       }
     };
     return(
@@ -341,14 +341,34 @@ class IndexTable extends React.Component {
     const styles = {
       main: {
         fontFamily: constStyles.fontFamily,
-        color: constStyles.darkBlue
+        color: constStyles.darkBlue,
+        padding: '4%',
+        paddingTop: '3%',
+        paddingRight: '10%',
+        borderTop: '2px solid'+constStyles.blue,
+        borderBottom: '2px solid'+constStyles.blue,
+      },
+      file: {
+        padding: 4,
+        fontSize: 14,
+      },
+      heading: {
+        fontFamily: `'Oswald', sans-serif`,
+        letterSpacing: 0,
+        fontSize: 16,
+        paddingBottom: 5,
       }
     }
     return (
       <div>
-        {this.props.indexEntries.map( (entry, index) => {
-          return <div key ={index}>{entry}<br /></div>;
-        })}
+      {this.props.indexEntries.length?
+        <div style={styles.main}>
+          <div style={styles.heading}>Staged Files:</div>
+          {this.props.indexEntries.map( (entry, index) => {
+            return <div style={styles.file} key ={index}>{entry}</div>;
+          })}
+        </div>:
+      null}
       </div>
     );
   }
@@ -467,9 +487,8 @@ class StagingArea extends React.Component {
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
-        color: constStyles.grey,
-        fontFamily: constStyles.grey,
-        border: '2px solid'+constStyles.grey,
+        color: constStyles.blue,
+        border: '2px solid'+constStyles.blue,
       },
       selectiveDiffPanel: {
         width: '69%',
@@ -482,7 +501,9 @@ class StagingArea extends React.Component {
         <div style={styles.createCommit} >
           <div>
             <StatusTable {...this.props} ref={(ref) => this.statusTable = ref} />
-            <RaisedButton label='Add to Index!' onMouseDown={this.addToIndex} />
+            <RaisedButton
+            label='Add to Index!'
+            labelColor={constStyles.darkBlue} onMouseDown={this.addToIndex} />
             <IndexTable indexEntries={this.state.indexPaths.map( (status) => {return status.label})} />
           </div>
             <CommitMessage buttonMsg='Create Commit!' commitCB={this.createCommit} />
