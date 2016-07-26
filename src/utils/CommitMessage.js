@@ -37,6 +37,7 @@ class CommitMessage extends React.Component {
 
     const styles = {
       main: {
+        borderTop: '2px solid'+constStyles.blue,
         borderBottom: '2px solid'+constStyles.blue
       },
       textarea: {

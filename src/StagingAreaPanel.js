@@ -346,7 +346,6 @@ class IndexTable extends React.Component {
         paddingTop: '3%',
         paddingRight: '10%',
         borderTop: '2px solid'+constStyles.blue,
-        borderBottom: '2px solid'+constStyles.blue,
       },
       file: {
         padding: 4,
