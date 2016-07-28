@@ -206,12 +206,6 @@ class App extends React.Component {
         // border: '1px solid blue',
         overflow: 'hidden',
       },
-      repos: {
-      },
-      tabs: {
-        overflow: 'hidden', 
-        width: '50%',
-      },
       font: {
         fontFamily: '"Roboto", sans-serif',
       },
@@ -248,7 +242,7 @@ class App extends React.Component {
           <div style={styles.mainPanel} >
           <Snackbar open={this.state.openWrongDirSnackBar} message={wrongDirError} autoHideDuration={4000}
           style={styles.font} onRequestClose={this.handleRequestClose}/>
-          {children || <Repo style={styles.repos} repos={this.state.repos} pathToRepo={renderRepo? renderRepo.path: ''}
+          {children || <Repo repos={this.state.repos} pathToRepo={renderRepo? renderRepo.path: ''}
             selectRepo={this.handleRepoClick} onKeyPress={this.handleKeyPressChange}/>}
           </div>
         </div>
