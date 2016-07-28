@@ -10,9 +10,8 @@ if (process.env.NODE_ENV === 'development') {
 
 app.on( 'ready',function() {
   var mainWindow = new BrowserWindow({
-	  // show: false,
-    width: 1300,
-    height: 900
+    width: 1200,
+    height: 600
   });
    mainWindow.loadURL('file://' + __dirname + '/src/index-electron.html');
 
