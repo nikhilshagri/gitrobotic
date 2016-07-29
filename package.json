@@ -32,6 +32,7 @@
     "babel-register": "^6.9.0",
     "concurrently": "^2.1.0",
     "cross-env": "^1.0.7",
+    "electron-devtools-installer": "^2.0.0",
     "electron-prebuilt": "^0.37.8",
     "electron-rebuild": "^1.1.4",
     "extract-text-webpack-plugin": "^1.0.1",
