@@ -48,8 +48,8 @@
   "dependencies": {
     "electron-debug": "^1.0.1",
     "express": "^4.14.0",
-    "material-ui": "^0.15.2",
     "nodegit": "^0.13.2",
+    "material-ui": "^0.15.3",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-router": "^2.6.0",
