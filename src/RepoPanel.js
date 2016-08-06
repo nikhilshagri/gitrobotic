@@ -139,7 +139,7 @@ class Repo extends React.Component {
   dirSelect = (event) => {
     let path = dialog.showOpenDialog({
       title:'title',
-      buttonLabel: 'label',
+      buttonLabel: 'Open',
       properties: [ 'openDirectory' ]
     });
     if(path) {
