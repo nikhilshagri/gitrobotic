@@ -117,7 +117,7 @@ class SidePanel extends React.Component {
         fontFamily: constStyles.fontFamily,
         backgroundColor: constStyles.grey,
         overflow: 'scroll',
-        height: 450
+        height: '100%'
       },
       listComponent: {
         fontFamily: constStyles.fontFamily,
