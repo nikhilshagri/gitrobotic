@@ -303,7 +303,7 @@ class CommitTree extends React.Component {
         borderTop: '0px',
         borderRadius: '0px 0px 4px 4px',
         overflow: 'auto',
-        height: 350,
+        height: 430,
       },
       branchName: {
         color: constStyles.yellow,
@@ -336,7 +336,7 @@ class CommitTree extends React.Component {
       rows.push(<Commit getCommitDiff={this.getCommitDiff} commit={commit} key={index} />);
     });
     return (
-      <div style={{display: 'flex'}} >
+      <div style={{display: 'flex', overflow: 'auto', height: 500}} >
         <div style={{width: '35%'}}>
           <div style={styles.branchName}>
             <img style={{width: 15, height: 24}} src={url}></img>
@@ -348,9 +348,9 @@ class CommitTree extends React.Component {
           </div>
         </div>
         {this.state.selected_commit?
-          <div style={{width: '65%', height: 500, overflow: 'auto'}}>
+          <div style={{width: '65%', overflow: 'auto'}}>
             <CommitInfo commit={this.state.selected_commit} />
-            <div style={{overflow: 'scroll', border: '2px solid'+constStyles.yellow}}>
+            <div style={{overflow: 'auto', border: '2px solid'+constStyles.yellow}}>
               <DiffPanel diffs={this.state.diffs} diffStyle={styles.diffProps} />
             </div>
           </div>:

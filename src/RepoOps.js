@@ -103,6 +103,8 @@ class RepoOps extends React.Component {
     const styles = {
       main: {
         display: 'flex',
+        height: 500,
+        overflow: 'hidden'
       },
       sidePanel: {
         width: '20%',
@@ -110,6 +112,7 @@ class RepoOps extends React.Component {
       },
       tabs: {
         overflow: 'hidden',
+        height: 500,
         width: '80%',
       }
     };
