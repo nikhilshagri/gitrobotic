@@ -96,7 +96,7 @@ class Commit extends React.Component {
         fontFamily: '"Roboto", sans-serif',
         padding: 1,
         margin: 0,
-        backgroundColor: '#fff6dc',
+        backgroundColor: '#FFFCF3',
         borderBottom: '2px solid #ffffff',
         color: constStyles.yellow,
       },
