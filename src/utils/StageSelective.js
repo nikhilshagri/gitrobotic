@@ -35,7 +35,7 @@ class StageSelective extends React.Component {
     }
   }
 
-  createCommit = (filesArr) => {
+  createCommit = (filesArr, commitMsg) => {
 
     if(filesArr.length === 0) {
       console.log('Please stage lines which are modified');
@@ -46,8 +46,11 @@ class StageSelective extends React.Component {
 
     let repo;
     gitFunctions.getRepo(this.props.repo.path)
-    .then( (repo) => {
-      repo = repo;
+    .then( (repoResult) => {
+      repo = repoResult;
+      return repo.refreshIndex();
+    })
+    .then((index) => {
       const isStaged = false;
 
       let promises = [];
@@ -56,12 +59,16 @@ class StageSelective extends React.Component {
       });
       return Promise.all(promises);
     })
+    //until here, all entries were added to the index and an index tree was written
+    //from here, the new commit is generated using the index tree
+    .then( () => {
+      return gitFunctions.createCommit(this.props.repo.path, commitMsg);
+    })
     .catch( (err) => {
       console.log('err:',err);
     })
-    .then( (num) => {
-      console.log('done!');
-      return repo.refreshIndex();
+    .done(function(commitId) {
+      console.log('Commit Hash:'+commitId);
     });
   }
 
@@ -94,7 +101,7 @@ class StageSelective extends React.Component {
       }
     });
 
-    this.createCommit(filesArr);
+    this.createCommit(filesArr, commitMsg);
   }
 
   render = () => {
