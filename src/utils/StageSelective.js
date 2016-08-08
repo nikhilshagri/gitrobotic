@@ -12,6 +12,33 @@ const gitFunctions = {
     const pathToRepo = require('path').resolve(path);
 
     return Git.Repository.open(pathToRepo);
+  },
+  /* TODO: Create a common Gitfunctions object, this function is
+           the exact same as in StagingAreaPanel                 */
+  createCommit: (repoPath, oid, commitMsg) => {
+
+    let index;
+    let repo;
+    let pathToRepo = require('path').resolve(repoPath);
+    return Git.Repository.open(pathToRepo)
+      .then(function(repoResult) {
+        repo = repoResult;
+        return Git.Reference.nameToId(repo, "HEAD");
+      })
+      .then(function(head) {
+        return repo.getCommit(head);
+      })
+      .then(function(parent) {
+        const currTimeInSecs = (new Date()).getTime()/1000;
+        // TODO: Replace author and committer name with a name which
+        // the user chooses
+        let author = Git.Signature.create("Author name",
+          "emailid@domain.com", currTimeInSecs , 0);
+        let committer = Git.Signature.create("Author name",
+          "emailid@domain.com", currTimeInSecs , 0);
+
+        return repo.createCommit("HEAD", author, committer, commitMsg, oid, [parent]);
+      });
   }
 };
 
@@ -42,9 +69,8 @@ class StageSelective extends React.Component {
       return;
     }
 
-    // console.log(filesArr);
-
     let repo;
+    let oid;
     gitFunctions.getRepo(this.props.repo.path)
     .then( (repoResult) => {
       repo = repoResult;
@@ -52,23 +78,31 @@ class StageSelective extends React.Component {
     })
     .then((index) => {
       const isStaged = false;
-
       let promises = [];
       filesArr.forEach( (file, index) => {
         promises.push(repo.stageLines(file.path,file.lines,isStaged));
       });
       return Promise.all(promises);
     })
+    .then(() => {
+      return repo.refreshIndex();
+    })
+    .then((updatedIndex) => {
+      return updatedIndex.writeTree();
+    })
+    .then(function(oidResult) {
+      oid = oidResult;
+    })
     //until here, all entries were added to the index and an index tree was written
     //from here, the new commit is generated using the index tree
     .then( () => {
-      return gitFunctions.createCommit(this.props.repo.path, commitMsg);
+      let innerPromise = gitFunctions.createCommit(this.props.repo.path, oid, commitMsg);
+      innerPromise.done(function(commitId) {
+        console.log('Commit Hash:'+commitId);
+      });
     })
     .catch( (err) => {
       console.log('err:',err);
-    })
-    .done(function(commitId) {
-      console.log('Commit Hash:'+commitId);
     });
   }
 
