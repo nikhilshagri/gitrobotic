@@ -71,20 +71,19 @@ class StageSelective extends React.Component {
 
     let repo;
     let oid;
-    gitFunctions.getRepo(this.props.repo.path)
+    let promise = gitFunctions.getRepo(this.props.repo.path)
     .then( (repoResult) => {
       repo = repoResult;
-      return repo.refreshIndex();
-    })
-    .then((index) => {
-      const isStaged = false;
-      let promises = [];
-      filesArr.forEach( (file, index) => {
-        promises.push(repo.stageLines(file.path,file.lines,isStaged));
+    });
+
+    const isStaged = false;
+    promise = filesArr.reduce( (prevPromise, file) => {
+      return prevPromise.then( () => {
+        return repo.stageLines(file.path, file.lines, isStaged);
       });
-      return Promise.all(promises);
-    })
-    .then(() => {
+    }, promise);
+
+    promise.then(() => {
       return repo.refreshIndex();
     })
     .then((updatedIndex) => {
