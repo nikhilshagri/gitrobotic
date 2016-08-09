@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Snackbar from 'material-ui/Snackbar';
+
 import DiffPanel from './DiffPanel';
 import CommitMessage from './CommitMessage';
 
@@ -59,6 +61,7 @@ class StageSelective extends React.Component {
     super(props);
     this.state = {
       commitMsg: '',
+      open: false,
     }
   }
 
@@ -96,14 +99,21 @@ class StageSelective extends React.Component {
     //from here, the new commit is generated using the index tree
     .then( () => {
       let innerPromise = gitFunctions.createCommit(this.props.repo.path, oid, commitMsg);
-      innerPromise.done(function(commitId) {
+      innerPromise.done((commitId) => {
         console.log('Commit Hash:'+commitId);
+        this.openSnackBar();
       });
     })
     .catch( (err) => {
       console.log('err:',err);
     });
   }
+
+  openSnackBar = () => {
+    this.setState({
+      open: true,
+    });
+  };
 
   collectCheckedLines = (commitMsg) => {
 
@@ -136,6 +146,12 @@ class StageSelective extends React.Component {
 
     this.createCommit(filesArr, commitMsg);
   }
+
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
 
   render = () => {
 
@@ -194,6 +210,12 @@ class StageSelective extends React.Component {
           ref={(ref) => this.diffPanel = ref}
           diffStyle={styles.diffProps} />
         </div>
+        <Snackbar style={{fontFamily: constStyles.fontFamily}}
+          open={this.state.open}
+          message="Changes committed successfully!"
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     );
   }
