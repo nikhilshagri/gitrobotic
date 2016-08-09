@@ -196,7 +196,7 @@ class StageSelective extends React.Component {
     return (
       <div style={styles.main} >
         <div style={styles.title} >
-          Selective Staging: Stage individual lines/hunk (modified files only)
+          Selective Staging: Stage individual lines/hunks (modified files only)
         </div>
         <div style={styles.cover}>
           <div style={styles.commitmsg} >
