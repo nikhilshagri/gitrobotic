@@ -8,6 +8,9 @@ import FlatButton from 'material-ui/FlatButton';
 import StageSelective from './utils/StageSelective';
 import CommitMessage from './utils/CommitMessage';
 
+import * as fs from 'fs';
+// to watch over files and reload diffPanel when any changes occur
+import watch from 'watch';
 import Git, { Diff } from 'nodegit';
 
 const constStyles = {
@@ -453,15 +456,33 @@ class StagingArea extends React.Component {
     });
   }
 
+  setupWatchActions = () => {
+
+    const path = this.props.repo.path;
+
+    fs.readFile(require('path').resolve(path+'/asd', '.gitignore'), (err, data) => {
+      if (err) {
+        // no .gitignore file found, assume that all files
+        // are being tracked by git
+        return;
+      }
+      console.log(data.toString().split('\n'));
+    });
+  }
+
   componentDidMount = () => {
     let diffArr = [];
-    if(this.props.repo)
+    if(this.props.repo) {
       gitFunctions.getUnstagedChanges(this.props.repo.path)
       .done( (diff) => {
         this.setState({
           diffs: [ diff ]
         });
       });
+
+      this.setupWatchActions();
+    }
+
   }
 
   componentWillReceiveProps = (newprops) => {
