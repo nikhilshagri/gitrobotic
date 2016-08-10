@@ -6,6 +6,8 @@ import DiffPanel from './DiffPanel';
 import CommitMessage from './CommitMessage';
 
 import Promise from 'promise';
+// to watch over files and reload diffPanel when any changes occur
+import watch from 'watch';
 import Git from 'nodegit';
 
 const gitFunctions = {
@@ -43,6 +45,20 @@ const gitFunctions = {
       });
   }
 };
+
+// test code for watch
+watch.createMonitor('/home/User/Downloads', (monitor) => {
+  monitor.on("created", (f, stat) => {
+    console.log('created',f, stat);
+  })
+  monitor.on("changed", (f, curr, prev) => {
+    console.log('changed',f, curr, prev);
+  })
+  monitor.on("removed", (f, stat) => {
+    console.log('removed',f, stat);
+  })
+  // monitor.stop(); // Stop watching
+});
 
 const constStyles = {
   fontFamily: `apple-system,
