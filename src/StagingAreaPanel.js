@@ -504,6 +504,26 @@ class StagingArea extends React.Component {
         });
         return ignore;
       };
+
+      const configWatch = {
+        ignoreDotFiles: false,
+        ignoreUnreadAbleDir: true,
+        ignoreNotPermitted: true,
+        filter: filterIgnored
+      };
+
+      watch.createMonitor(this.props.repo.path, configWatch, (monitor) => {
+        console.log('Files/directories being monitored: ', monitor.files);
+        monitor.on("created", (f, stat) => {
+          console.log('created',f, stat);
+        })
+        monitor.on("changed", (f, curr, prev) => {
+          console.log('changed',f, curr, prev);
+        })
+        monitor.on("removed", (f, stat) => {
+          console.log('removed',f, stat);
+        })
+      });
     });
   }
 
