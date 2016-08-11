@@ -491,6 +491,9 @@ class StagingArea extends React.Component {
             regexes.push(new RegExp(line));
         }
       });
+      // to ignore the .git directory as well
+      regexes.push(new RegExp('.git'+'$'));
+
     });
   }
 
