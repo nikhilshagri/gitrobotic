@@ -467,7 +467,30 @@ class StagingArea extends React.Component {
         // are being tracked by git
         return;
       }
-      console.log(data.toString().split('\n'));
+      const lines = data.toString().split('\n').map((line) => {
+        return line.trim();
+      });
+      let regexes = [];
+      lines.forEach((line, index) => {
+
+        // ignore comments
+        if(!line.startsWith('#')) {
+          // file extensions
+          if(line.startsWith('*'))
+            line = line.slice(1);
+          // for directories
+          else if(line.length !== 0)
+            line = this.props.repo.name+'/'+line+'$';
+
+          if(line.endsWith('*'))
+            line = line.slice(0, line.length-1);
+          if(line.startsWith('/'))
+            line = line.slice(1);
+
+          if(line.length !== 0)
+            regexes.push(new RegExp(line));
+        }
+      });
     });
   }
 
