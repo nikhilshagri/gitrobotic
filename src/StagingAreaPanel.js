@@ -494,6 +494,16 @@ class StagingArea extends React.Component {
       // to ignore the .git directory as well
       regexes.push(new RegExp('.git'+'$'));
 
+      const filterIgnored = (f, stat) => {
+        // tracks file/directory if true is returned
+        let ignore = true;
+        regexes.forEach((regex) => {
+          if(regex.test(f)) {
+            ignore = false;
+          }
+        });
+        return ignore;
+      };
     });
   }
 
