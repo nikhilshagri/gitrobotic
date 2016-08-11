@@ -460,8 +460,9 @@ class StagingArea extends React.Component {
 
     const path = this.props.repo.path;
 
-    fs.readFile(require('path').resolve(path+'/asd', '.gitignore'), (err, data) => {
+    fs.readFile(require('path').resolve(path, '.gitignore'), (err, data) => {
       if (err) {
+        console.log('no .gitignore file found!');
         // no .gitignore file found, assume that all files
         // are being tracked by git
         return;
