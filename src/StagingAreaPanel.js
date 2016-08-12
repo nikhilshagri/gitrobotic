@@ -508,6 +508,17 @@ class StagingArea extends React.Component {
         return ignore;
       };
 
+      const reloadComponent = (action, filePath) => {
+        gitFunctions.getUnstagedChanges(this.props.repo.path)
+        .done( (diff) => {
+          this.setState({
+            diffs: [ diff ],
+            snackbarOpen: true,
+            snackbarMessage: action + filePath
+          });
+        });
+      };
+
       const configWatch = {
         ignoreDotFiles: false,
         ignoreUnreadAbleDir: true,
@@ -516,15 +527,18 @@ class StagingArea extends React.Component {
       };
 
       watch.createMonitor(this.props.repo.path, configWatch, (monitor) => {
-        console.log('Files/directories being monitored: ', monitor.files);
+        // console.log('Files/directories being monitored: ', Object.keys(monitor.files));
         monitor.on("created", (f, stat) => {
-          console.log('created',f, stat);
+          console.log('Created ',f);
+          reloadComponent('Created ',f);
         })
         monitor.on("changed", (f, curr, prev) => {
-          console.log('changed',f, curr, prev);
+          console.log('Modified ',f);
+          reloadComponent('Modified ',f);
         })
         monitor.on("removed", (f, stat) => {
-          console.log('removed',f, stat);
+          console.log('Deleted ',f);
+          reloadComponent('Deleted ',f);
         })
       });
     });
