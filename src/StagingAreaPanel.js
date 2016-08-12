@@ -430,8 +430,8 @@ class StagingArea extends React.Component {
     });
 
 
-    //takes in initial promise, uses it to chain a new promise to it, and returns the promise,
-    //which is used in the next iteration
+    // takes in initial promise, uses it to chain a new promise to it, and returns the promise,
+    // which is used in the next iteration
     promise = filePaths.reduce( (prevPromise, path, currentIndex) => {
                 return prevPromise.then( () => {
                   return index.addByPath(path);
@@ -562,7 +562,6 @@ class StagingArea extends React.Component {
 
       this.setupWatchActions();
     }
-
   }
 
   componentWillReceiveProps = (newprops) => {
