@@ -4,6 +4,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
+import Snackbar from 'material-ui/Snackbar';
 
 import StageSelective from './utils/StageSelective';
 import CommitMessage from './utils/CommitMessage';
@@ -383,6 +384,8 @@ class StagingArea extends React.Component {
     this.state = {
       indexPaths: [],
       diffs: [],
+      snackbarOpen: false,
+      snackbarMessage: ''
     };
   }
 
@@ -527,6 +530,12 @@ class StagingArea extends React.Component {
     });
   }
 
+  handleSnackbarClose = () => {
+    this.setState({
+      snackbarOpen: false,
+    });
+  }
+
   componentDidMount = () => {
     let diffArr = [];
     if(this.props.repo) {
@@ -595,6 +604,13 @@ class StagingArea extends React.Component {
         <div style={styles.selectiveDiffPanel} >
           <StageSelective diffs={this.state.diffs} repo={this.props.repo} />
         </div>
+        <Snackbar
+          style={{fontFamily: constStyles.fontFamily}}
+          open={this.state.snackbarOpen}
+          autoHideDuration={4000}
+          message={this.state.snackbarMessage}
+          onRequestClose={this.handleSnackbarClose}
+        />
       </div>
     )
   }
