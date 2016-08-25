@@ -77,7 +77,7 @@ class RepoTable extends React.Component {
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state={ value:props.pathToRepo };
+    this.state={ value:'' };
   }
 
   updateValue = (event) => {
@@ -87,8 +87,10 @@ class SearchBar extends React.Component {
   }
 
   sendQuery = (event) => {
-    if(!event.which || (event.which && event.which === 13) )
+    if(!event.which || (event.which && event.which === 13) ) {
+      this.setState({ value: ''});
       this.props.onKeyPress(this.state.value);
+    }
   }
 
   render() {
