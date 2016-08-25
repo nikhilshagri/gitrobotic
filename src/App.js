@@ -117,6 +117,10 @@ class App extends React.Component {
     };
   }
 
+  static contextTypes = {
+    router: React.PropTypes.object
+  };
+
   handleKeyPressChange = (passedPath) => {
     //TODO: Check if passed path is valid or not
     //extracts the name of the repo from the path name
@@ -155,6 +159,8 @@ class App extends React.Component {
           repos: repos
         });
         this.changeToolbar(repoName);
+        this.context.router.push('/repoOps');
+
       })
       .catch( (failure) => {
         console.log('Could not find a git repository in the folder',
