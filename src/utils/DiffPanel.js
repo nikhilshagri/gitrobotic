@@ -192,7 +192,7 @@ class DiffPanel extends React.Component {
         // each div contains all the checkboxes of a single file
         <div key={fileIndex} >
           <div style={{height: 25}} />
-          <div style={{ border: '1px solid white',}} >
+          <div style={{ border: '1px solid white'}} >
           {diffs.map( (diff, diffIndex) => {
             let { header, lines, path } = diff;
 
@@ -201,14 +201,16 @@ class DiffPanel extends React.Component {
                 height: 13,
                 padding: 0,
                 margin: 0,
-                marginTop: 1,
-                marginBottom: 1,
+                marginTop: 3,
+                marginBottom: 2,
+                marginLeft: 3,
+                marginRight: -5,
               }
             };
             // the header calls the callback with an array containing all the difflines
             // and the line calls the callback with its corresponding diffline
             return (
-              <div key={diffIndex} >
+              <div key={diffIndex} style={{ display: 'flex', flexDirection: 'column'}}>
 
               <input type='checkbox' style={styles.checkbox}
               onChange={(e) => {this.callbackHunk(e.target.checked,fileIndex, diffIndex);}} />
