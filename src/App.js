@@ -243,7 +243,7 @@ class App extends React.Component {
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <div style={{width: '100%', border: '1px solid black', height: '100vh'}} >
+        <div style={{width: '100%', height: '100vh'}} >
           <MainToolbar repoName={renderRepo? renderRepo.name: ''} />
           <div style={styles.mainPanel} >
           <Snackbar open={this.state.openWrongDirSnackBar} message={wrongDirError} autoHideDuration={4000}
