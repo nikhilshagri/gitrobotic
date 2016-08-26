@@ -21,10 +21,10 @@ installExtension(REACT_DEVELOPER_TOOLS)
   });
    mainWindow.loadURL('file://' + __dirname + '/src/index-electron.html');
 
-  // mainWindow.webContents.on('did-finish-load', () => {
-  //   mainWindow.show();
-  //   mainWindow.focus();
-  // });
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.show();
+    mainWindow.focus();
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
