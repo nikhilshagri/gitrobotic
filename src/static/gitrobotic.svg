@@ -1,24 +1,38 @@
 <svg width="500" height="500" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="500" height="500" stroke="black" fill="transparent" stroke-width="5"/>
+    <!-- <rect x="0" y="0" width="500" height="500" stroke="black" fill="transparent" stroke-width="5"/> -->
+
+    <!-- outermost pair of orange-yellow circles -->
     <ellipse cx="245" cy="260" rx="210" ry="210" fill="#FFC300 "/>
     <circle cx ="250" cy="250" r="210" fill="#ff8204" />
 
-    <rect x="110" y="170" width="290" height="130" fill="black" />
-    <rect x="110" y="310" width="290" height="50" fill="black" />
+    <!-- rectangles for face -->
+    <!-- <rect x="110" y="170" width="290" height="130" fill="black" /> -->
+    <polygon points="110 178, 400 165, 400 300, 115 300, 110 290" fill="black" />
+    <!-- <rect x="110" y="310" width="290" height="50" fill="black" /> -->
+    <polygon points="110 312, 160 310, 175 330, 215 330, 225 310, 300 310, 310 330, 340 330, 350 310, 400 310, 400 350, 394 360, 110 360" fill="black" />
 
-    <rect x="60" y="205" width="20" height="40" fill="black" />
-    <rect x="85" y="219" width="20" height="20" fill="black" />
+    <!-- circles for eyes -->
+    <circle cx="180" cy="245" r="22" fill="#ff8204" />
+    <circle cx="310" cy="235" r="32" fill="#ff8204" />
 
-    <rect x="440" y="205" width="20" height="40" fill="black" />
-    <rect x="410" y="219" width="20" height="20" fill="black" />
+    <!-- rectangles for ears -->
+    <rect x="63" y="205" width="20" height="40" fill="black" />
+    <!-- <rect x="85" y="219" width="20" height="20" fill="black" /> -->
+    <polygon points="85 219, 96 219, 101 232, 98 219, 108 219, 108 239, 97 239, 91 228, 95 239, 85 239" fill="black" />
 
+    <rect x="435" y="205" width="20" height="40" fill="black" />
+    <rect x="403" y="219" width="30" height="20" fill="black" />
+
+    <!-- circles representing commits in a graph -->
     <circle cx="250" cy="139" r="18" fill="black" />
     <circle cx="202" cy="101" r="18" fill="black" />
     <circle cx="285" cy="100" r="18" fill="black" />
-    <circle cx="293" cy="57" r="18" fill="black" />
+    <circle cx="297" cy="50" r="18" fill="black" />
 
-    <polyline points="250 170 250 139 202 101"
-stroke="black" fill="transparent" stroke-width="12"/>
-    <polyline points="250 139 285 100 293 57"
-stroke="black" fill="transparent" stroke-width="11"/>
+    <!-- graph edges joining commit nodes -->
+    <polyline points="250 190, 250 139, 202 101"
+    stroke="black" fill="transparent" stroke-width="12"/>
+    <polyline points="250 139 285 100 297 50"
+    stroke="black" fill="transparent" stroke-width="11"/>
+
 </svg>
