@@ -4,9 +4,10 @@ const options = {
   dir: '.',
   arch: 'x64',
   download: {
-    cache: './electron-cache',
-    out: './dist'
+    cache: './electron-cache'
   },
+  out: './dist',
+  ignore: /dist/,
   overwrite: 'true',
   platform: 'linux',
   tmpdir: './tmpdir',
