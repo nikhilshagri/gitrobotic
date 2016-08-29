@@ -2,7 +2,7 @@
   "name": "gitrobotic",
   "version": "1.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "./main.development.js",
   "engines": {
     "electron": "1.2.1"
   },
