@@ -1,7 +1,7 @@
 var packager = require('electron-packager');
 
 const options = {
-  dir: './src',
+  dir: '.',
   arch: 'x64',
   download: {
     cache: './electron-cache',
