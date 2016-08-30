@@ -10,7 +10,7 @@
     <script>
       (function() {
         const script = document.createElement('script');
-        script.src = (process.env.HOT) ? 'http://localhost:3000/build/bundle.js' : '../build/bundle.js';
+        script.src = (process.env.NODE_ENV === 'development') ? 'http://localhost:3000/build/bundle.js' : '../dist/build/build.js';
         document.write(script.outerHTML);
       }());
     </script>
