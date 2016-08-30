@@ -1,6 +1,7 @@
 //electron entry-point
 
-import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+const REACT_DEVELOPER_TOOLS = require('electron-devtools-installer').REACT_DEVELOPER_TOOLS;
+var installExtension = require('electron-devtools-installer').default;
 var app = require('electron').app;
 var BrowserWindow = require('electron').BrowserWindow;
 var path = require( "path" );
@@ -9,7 +10,7 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
-app.on( 'ready',function() {
+app.on('ready',function() {
 
 installExtension(REACT_DEVELOPER_TOOLS)
   .then((name) => console.log(`Added Extension:  ${name}`))
@@ -19,7 +20,7 @@ installExtension(REACT_DEVELOPER_TOOLS)
     width: 1200,
     height: 600
   });
-   mainWindow.loadURL('file://' + __dirname + '/src/index-electron.html');
+  mainWindow.loadURL('file://' + __dirname + '/src/index-electron.html');
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();

@@ -2,7 +2,7 @@
   "name": "gitrobotic",
   "version": "1.1.0",
   "description": "",
-  "main": "./main.development.js",
+  "main": "./main.start.js",
   "engines": {
     "electron": "1.2.1"
   },
@@ -15,7 +15,7 @@
     "rebuild": "npm rebuild --runtime=electron --target=1.2.1 --disturl=https://atom.io/download/atom-shell --build-from-source",
     "dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\"",
     "hot-server": "node -r babel-register server.js",
-    "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./main.development",
+    "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./main.start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
