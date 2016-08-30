@@ -6,11 +6,10 @@ const options = {
   download: {
     cache: './electron-cache'
   },
-  out: './dist',
+  out: './dist/bin',
   ignore: /dist/,
   overwrite: 'true',
   platform: 'linux',
-  tmpdir: './tmpdir',
   version: '1.2.1',
 };
 
