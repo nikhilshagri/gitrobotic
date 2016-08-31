@@ -1,7 +1,4 @@
 //electron entry-point
-
-const REACT_DEVELOPER_TOOLS = require('electron-devtools-installer').REACT_DEVELOPER_TOOLS;
-var installExtension = require('electron-devtools-installer').default;
 var app = require('electron').app;
 var BrowserWindow = require('electron').BrowserWindow;
 var path = require( "path" );
@@ -12,9 +9,13 @@ if (process.env.NODE_ENV === 'development') {
 
 app.on('ready',function() {
 
-installExtension(REACT_DEVELOPER_TOOLS)
+if(process.env.NODE_ENV === 'development') {
+  const REACT_DEVELOPER_TOOLS = require('electron-devtools-installer').REACT_DEVELOPER_TOOLS;
+  var installExtension = require('electron-devtools-installer').default;
+  installExtension(REACT_DEVELOPER_TOOLS)
   .then((name) => console.log(`Added Extension:  ${name}`))
   .catch((err) => console.log('An error occurred: ', err));
+}
 
   var mainWindow = new BrowserWindow({
     width: 1200,
