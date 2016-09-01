@@ -19,8 +19,8 @@
     "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./main.start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Nikhil Shagrithaya",
+  "license": "MIT",
   "devDependencies": {
     "webpack-node-externals": "^1.3.3"
   },
