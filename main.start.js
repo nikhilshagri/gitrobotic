@@ -32,8 +32,8 @@ if(process.env.NODE_ENV === 'development') {
     mainWindow = null;
   });
 
-  if (process.env.NODE_ENV === 'development') {
+  // if (process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
-  }
+  // }
 
 });
