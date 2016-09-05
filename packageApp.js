@@ -7,7 +7,6 @@ const options = {
     cache: './electron-cache'
   },
   out: './dist/bin',
-  ignore: /dist/,
   overwrite: 'true',
   platform: 'linux',
   version: '1.2.1',
