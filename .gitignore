@@ -1,4 +1,6 @@
 node_modules/*
 build/*
+dist/*
+electron-cache/*
 main.js
 main.js.map
