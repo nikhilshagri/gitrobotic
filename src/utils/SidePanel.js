@@ -1,14 +1,30 @@
 import React from 'react';
 
-import { Link } from 'react-router'
+import { Link } from 'react-router';
 
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton';
 
-var url = require("file!./../static/branchIcon.svg");
-var urlFolder = require("file!./../static/folderIcon.svg");
+let branchIconpath, folderIconpath;
+
+const loadBranchIcon = () => {
+  if (process.env.NODE_ENV === 'development')
+    return require("file!./../static/branchIcon.svg");
+  else
+    return require("file?emitFile=false&name=[path]../../static/[name].[ext]!./../static/branchIcon.svg");
+};
+
+const loadFolderIcon = () => {
+  if (process.env.NODE_ENV === 'development')
+    return require("file!./../static/folderIcon.svg");
+  else
+    return require("file?emitFile=false&name=[path]../../static/[name].[ext]!./../static/folderIcon.svg");
+};
+
+var url = loadBranchIcon();
+var urlFolder = loadFolderIcon();
 
 const constStyles = {
   fontFamily: `apple-system,

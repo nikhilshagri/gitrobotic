@@ -8,7 +8,12 @@ import DiffPanel from './utils/DiffPanel';
 
 import Git from 'nodegit';
 
-var url = require("file!./static/branchIcon.svg");
+var url = (() => {
+  if (process.env.NODE_ENV === 'development')
+    return require("file!./static/branchIcon.svg");
+  else
+    return require("file?emitFile=false&name=[path]../../static/[name].[ext]!./static/branchIcon.svg");
+})();
 
 const constStyles = {
   fontFamily: `apple-system,
