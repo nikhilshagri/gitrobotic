@@ -194,7 +194,8 @@ class App extends React.Component {
 
   componentWillMount = () => {
     injectTapEventPlugin();
-    this.handleKeyPressChange('../dummy-repo');
+    if(process.env.NODE_ENV === 'development')
+      this.handleKeyPressChange('../dummy-repo');
   }
 
   componentWillReceiveProps = (newprops) => {
