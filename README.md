@@ -1,3 +1,4 @@
+![gitrobotic.png](./gitrobotic-small.png)
 # gitrobotic
 A GUI for git built using Electron and React. I created this project to get a grasp on the fundamentals of React, and javascript in general.
 
