@@ -1,6 +1,6 @@
 ![gitrobotic.png](./gitrobotic-small.png)
 # gitrobotic
-A GUI for git built using Electron and React. I created this project to get a grasp on the fundamentals of React, and javascript in general.
+A GUI for git built using Electron React, and [Nodegit](http://www.nodegit.org/). I created this project to get a grasp on the fundamentals of React, and javascript in general.
 
 ## Features
 * View the commits belonging to a branch by selecting the branch name.
