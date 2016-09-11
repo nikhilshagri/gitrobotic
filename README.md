@@ -9,6 +9,9 @@ A GUI for git built using Electron React, and [Nodegit](http://www.nodegit.org/)
 * Commit individual lines/hunks by selecting them in the selective staging area.
 * Gitrobotic continually watches files for changes and updates itself automatically :)
 
+## Build Instructions
+run `npm install` first and then run `npm run rebuild`. The `rebuild` command is required to compile `nodegit`. Then run `npm run dev` to start the webpack dev server and electron simultaneously.
+
 ## TODO
 * Add tagging capability.
 * Allow users to clone repos.
